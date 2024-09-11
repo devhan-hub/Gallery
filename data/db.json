@@ -1,0 +1,117 @@
+{
+    "images": [
+      {
+        "id": 1,
+        "title": "Beach Sunset",
+        "url": "images/img1.jpeg",
+        "category": "Nature"
+      },
+      {
+        "id": 2,
+        "title": "Mountain Hike",
+        "url": "images/img2.jpeg",
+        "category": "Nature"
+      },
+     
+      {
+        "id": 4,
+        "title": "Forest Stream",
+        "url":  "images/img4.jpeg",
+        "category": "Nature"
+      },
+      {
+        "id": 3,
+        "title": "City Skyline",
+        "url": "images/img3.jpeg",
+        "category": "Urban"
+      },
+      {
+        "id": 5,
+        "title": "Golden Retriever Puppy",
+        "url":"images/img5.jpeg",
+        "category": "Animals"
+      },
+     
+      {
+        "id": 7,
+        "title": "Wildlife Safari",
+        "url": "images/img7.jpeg",
+        "category": "Animals"
+      },
+      {
+        "id": 6,
+        "title": "Tropical Beach",
+        "url": "images/img6.jpeg",
+        "category": "Nature"
+      },
+      {
+        "id": 8,
+        "title": "Fireworks Festival",
+        "url":"images/img8.jpeg",
+        "category": "Events"
+      },
+      {
+        "id": 9,
+        "title": "Autumn Forest",
+        "url": "images/img9.jpeg",
+        "category": "Nature"
+      },
+      {
+        "id": 10,
+        "title": "Wedding Ceremony",
+        "url": "images/img10.jpeg",
+        "category": "Events"
+      }
+     
+    ],
+
+    "videos": [
+      {
+        "id": 1,
+        "url": "Video/all.mp4"
+        
+      },
+      {
+        "id": 2,
+        "url":  "Video/cakemp4.mp4"
+        
+      },
+     
+      {
+        "id": 4,
+        "url":  "Video/galary.mp4"
+        
+      },
+      {
+        "id": 3,
+        "url":  "Video/HANUM.mp4"
+      },
+      {
+        "id": 5,
+        "url": "Video/project_4_.mp4"
+      },
+     
+      {
+        "id": 7,
+        "url":  "Video/project3.mp4"
+      },
+      {
+        "id": 6,
+        "url":  "Video/question.mp4"
+      },
+      {
+        "id": 8,
+        "url": "Video/quote.mp4"
+      },
+      {
+        "id": 9,
+        "url": "Video/secondmp4.mp4"
+      },
+      {
+        "id": 10,
+        "url":  "Video/SEC.mp4"
+      }
+     
+    ]
+  }
+  
