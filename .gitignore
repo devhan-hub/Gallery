@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+/public/Video
+data/db.json
 
 # testing
 /coverage
