@@ -1,12 +1,11 @@
 import React, { useState  ,useContext} from 'react';
 import { FormControl, InputLabel, Select, MenuItem ,TextField} from '@mui/material';
 import GenericDialog from './GenericDialog';
-import axios from 'axios';
-import { v4 } from 'uuid';
-import { MediaContext } from './Reducer';
+import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
+
 
 export const MoveToAlbumDialog = ({ open, onClose, onMove }) => {
-   const { state, dispatch } = useContext(MediaContext);
+     const[docs] =useFirestoreAlbum();
     const [selectedAlbumId, setSelectedAlbumId] = useState('');
 
     return (
@@ -22,9 +21,9 @@ export const MoveToAlbumDialog = ({ open, onClose, onMove }) => {
                     value={selectedAlbumId}
                     onChange={(e) => setSelectedAlbumId(e.target.value)}
                     fullWidth>
-                    {state.albums && state.albums.map((album) => (
+                    {docs && docs.map((album) => (
                         <MenuItem key={album.id} value={album.id} >
-                            {album.title}
+                            {album.name}
                         </MenuItem>
                     ))}
                 </Select>
@@ -32,52 +31,7 @@ export const MoveToAlbumDialog = ({ open, onClose, onMove }) => {
         </GenericDialog>
     );
 };
- export const FormDialog = ({ open ,setOpen}) => {
-  const [title, setTitle] = useState('');
-  const {dispatch} = useContext(MediaContext)
-
-  const handleSubmit = (e) => {
-    if (title) {
-      const newfile = {
-        id:v4(),
-        title,
-        selected: []  
-      };
-      dispatch({type:'addAlbum', payload:newfile})
-      axios.post('http://localhost:8000/Albums',
-        newfile, {
-        headers: { 'Content-Type': 'application/json' }
-      })
-        .then(() => {
-          setOpen(false)
-          setTitle('');
-        
-        })
-        .catch(error => {
-          console.error('Error adding album:', error);
-        }
-        )
-    }
-setOpen(false)  };
-
-  return (
-    <GenericDialog
-      open={open}
-      handleClose={()=> setOpen(false)}
-      title="Add New Album"
-      onSubmit={handleSubmit}
-    >
-      <TextField
-        label="Title"
-        name="title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        fullWidth
-        required
-      />
-    </GenericDialog>
-  );
-};
+ 
 
 
 

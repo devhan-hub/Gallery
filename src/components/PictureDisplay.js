@@ -8,7 +8,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Fab, Button, ButtonGroup, Snackbar, Alert, Checkbox } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
-import { deleteDoc, doc } from "firebase/firestore"
+import { deleteDoc, doc, getDoc, updateDoc ,exists } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
@@ -20,7 +20,7 @@ const PictureDisplay = () => {
     const [selectedImages, setSelectedImages] = useState([]);
     const [clickTimeOut, setClickTimeOut] = useState(null)
     const [currentIndex, setCurrentIndex] = useState(null);
-
+const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
     const toggleSelected = (image) => {
         setSelectedImages((prevSelected) =>
             prevSelected.some((img) => img.id === image.id)
@@ -61,7 +61,35 @@ const PictureDisplay = () => {
             }
         })
     }
+    const handelAdd = async (albumId) => {
+        const selectedImageUrl = selectedImages.map((image) => image.url);
+        const selectedAlbumRef = doc(firebaseFirestore, 'albums', albumId);
+        const selectedAlbumDoc = await getDoc(selectedAlbumRef);
+              if (selectedAlbumDoc.exists()) {
+          const currentFiles = selectedAlbumDoc.data().files || [];
+                await updateDoc(selectedAlbumRef, {
+            files: [...currentFiles, ...selectedImageUrl]
+          });
+          setSelectedImages([])
+        } else {
+          console.error("Album does not exist!");
+        }
+      };
 
+      const handelFav =(imageUrl)=>{
+        let updatedFvoriteFile =[];
+       if(favoriteAlbum.files.includes(imageUrl))  {
+        updatedFvoriteFile= favoriteAlbum.files.filter((file) =>file !== imageUrl)
+       }
+       else {
+          updatedFvoriteFile =[...favoriteAlbum.files , imageUrl]
+       }
+       const selectedAlbumRef = doc(firebaseFirestore, 'albums', 'favorite');
+        updateDoc(selectedAlbumRef, {
+        files:updatedFvoriteFile
+      })
+      
+    }
     return (
         <>
             {docs && (
@@ -92,7 +120,7 @@ const PictureDisplay = () => {
                                 onClick={(event) => handleClick(index, image, event)}
                             />
                             <Fab size='small' sx={{
-                                //   ...(state.albums && (selectedFavoriteAlbum?.selected.includes(image.url) ? {color:"#ff6f61"}:{borderColor:"#ff6f61" , border:1})),
+                                //   ...(docs && (favoriteAlbum?.files.includes(image.url) ? {color:"#ff6f61"}:{borderColor:"#ff6f61" , border:1})),
                                 fontSize: '1.625rem',
                                 position: 'absolute',
                                 top: '20px',
@@ -102,7 +130,7 @@ const PictureDisplay = () => {
                                 transition: 'opacity 0.3s ease',
                                 '&:hover': { opacity: 1 }
                             }}
-                                // onClick={() =>{ favorite(image.url)}}
+                                onClick={() =>{ handelFav(image.url)}}
                                 className="group-hover:opacity-100 z-0">
                                 <FaHeart />
                             </Fab>
@@ -128,7 +156,7 @@ const PictureDisplay = () => {
                 <MoveToAlbumDialog
                     open={moveDialogOpen}
                     onClose={() => setMoveDialogOpen(false)}
-                    // onMove={handelAdd}
+                    onMove={handelAdd}
                 />
         </>
     );

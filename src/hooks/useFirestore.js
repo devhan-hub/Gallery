@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { firebaseFirestore } from '../firebase/Config';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 
-const useFirestore = (collectionName) => {
+const useFirestore = (collectionName ) => {
   const [docs, setDocs] = useState([]);
 
   useEffect(() => {
-    const collRef = collection(firebaseFirestore, collectionName);
+    const collRef = collection(firebaseFirestore, collectionName );
     const q = query(collRef, orderBy('createdAt', 'desc')); 
 
     const unsub = onSnapshot(q, (snap) => {
@@ -15,12 +15,13 @@ const useFirestore = (collectionName) => {
         documents.push({ ...doc.data(), id: doc.id });
       });
       setDocs(documents);
+      console.log(docs)
     });
 
-    // return () => unsub();
+    return () => unsub();
   }, [collectionName]);
 
-  return { docs };
+  return [docs];
 }
 
 export default useFirestore;

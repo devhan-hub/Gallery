@@ -31,18 +31,18 @@ const useStorage = (file  , fileType) => {
                 const last20FilesQuery = query(collectionAllFileRef, orderBy('createdAt', 'desc'), limit(20));
                 onSnapshot(last20FilesQuery, (snap)=>{
                   let last20Url=[];
+                  let last20Id=[];
                   snap.forEach(doc=>{
-                    last20Url.push({ url: doc.data().url, id: doc.id });
+                    last20Url.push( doc.data().url );
+                    last20Id.push(doc.id)
                   })
                    
                   const recentlyAddedAlbumRef = doc(firebaseFirestore, 'albums', 'recently');   
                    setDoc(recentlyAddedAlbumRef, {
                       name: 'recently',
-                      files: last20Url
+                      files: last20Url,
                     }, { merge: true });
                 })
-                
-              
                 setUrl(downloadURL);
 
               }

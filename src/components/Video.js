@@ -13,7 +13,7 @@ import { deleteObject, ref } from 'firebase/storage';
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
 const Video = () => {
-  const [docs] = useFirestore('videos');
+  const [docs] =[]
   const [ videoSlideoPen,sevideoSlideoPen] = useState(false);
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [SelectedVideos, setSelectedVideos] = useState([]);
