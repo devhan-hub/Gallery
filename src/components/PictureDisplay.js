@@ -1,47 +1,41 @@
-import React, { useEffect, useState, Suspense, useContext } from 'react';
-import { FaHeart } from 'react-icons/fa';
-import AddIcon from '@mui/icons-material/Add';
-import { Link } from 'react-router-dom';
+import React, { useState, Suspense } from 'react';
+import useFirestore from '../hooks/useFirestore';
+import Masonry from '@mui/lab/Masonry';
+import { motion } from 'framer-motion';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Fab, Button, ButtonGroup, Snackbar, Alert, Checkbox } from '@mui/material';
-import Masonry from '@mui/lab/Masonry';
-import {  motion } from 'framer-motion';
-import { MoveToAlbumDialog } from './MoveToAlbumDialog'
-import { MediaContext } from './Reducer';
-import { handelDelete, handelMove, handelPut } from './HandelModify'
+import { FaHeart } from 'react-icons/fa';
+import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
+import { deleteDoc, doc } from "firebase/firestore"
+import { deleteObject, ref } from 'firebase/storage';
+
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
+
 const PictureDisplay = () => {
-    const [currentIndex, setCurrentIndex] = useState(null);
+    const [docs] = useFirestore('images');
     const [imageSlideopen, setImageSlideopen] = useState(false);
     const [moveDialogOpen, setMoveDialogOpen] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
     const [clickTimeOut, setClickTimeOut] = useState(null)
-    const { state, dispatch } = useContext(MediaContext);
-    const [isMove, setIsMove] = useState(false)
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    let selectedFavoriteAlbum = null;
-    if(state.albums) {
-         selectedFavoriteAlbum = state.albums.find((album) => album.id === '2');
-    }
+    const [currentIndex, setCurrentIndex] = useState(null);
 
-
-    const toggleSelected = (imageId, imageURL) => {
+    const toggleSelected = (image) => {
         setSelectedImages((prevSelected) =>
-            prevSelected.some((image) => image.imageId === imageId)
-                ? prevSelected.filter((image) => image.imageId !== imageId)
-                : [...prevSelected, { imageId, imageURL }]
+            prevSelected.some((img) => img.id === image.id)
+                ? prevSelected.filter((img) => img.id !== image.id)
+                : [...prevSelected, image]
         );
     };
 
-    const handleClick = (index, imageId, imageURL, event) => {
+    const handleClick = (index, image, event) => {
         if (clickTimeOut) {
             clearTimeout(clickTimeOut)
             setClickTimeOut(null)
         }
         if (event.detail === 2) {
-            toggleSelected(imageId, imageURL);
+            toggleSelected(image);
         }
         else {
             setClickTimeOut(setTimeout(() => {
@@ -50,91 +44,75 @@ const PictureDisplay = () => {
             }, 300))
         }
     }
-    const handelDeleteOpp = () => {
-        let selectedImageId = selectedImages.map((selected) => selected.imageId)
-        const updatedImage = state.images.filter((image) =>
-            !selectedImageId.includes(image.id)
-        )
-        dispatch({ type: 'deleteMedia', payload: { type: 'image', updatedImage: updatedImage } })
-        handelDelete(setSnackbarMessage, setSnackbarOpen, isMove, selectedImages, setSelectedImages)
+
+    const handelDeleteOpp = async () => {
+        selectedImages.forEach(async (image) => {
+            const fireRef = doc(firebaseFirestore, 'all-files', image.id)
+            const storgaRef = ref(firebaseStorage, image.storagePath)
+            try {
+                await deleteDoc(fireRef)
+                await deleteObject(storgaRef)
+                setSelectedImages([])
+            }
+            catch (error) {
+                setSelectedImages([])
+
+                console.error("Error deleting image:", error);
+            }
+        })
     }
 
-    const handelAdd = (albumid) => {
-   
-        let selectedAlbum = state.albums.find((album) => album.id === albumid);
-        if (selectedAlbum) {
-            const updatedSelected = [...new Set([...selectedAlbum.selected, ...selectedImages.map(image => image.imageURL)])];
-            dispatch({ type: 'addToAlbum', payload: { albumId: albumid, updated: updatedSelected } })
-            handelPut(albumid, selectedAlbum, updatedSelected, 'sucessfully Added', setSnackbarOpen, setSnackbarMessage)
-            setSelectedImages([])
-        }
-    }
-    const favorite =(imageurl)=> {
-        let selectedAlbum = state.albums.find((album) => album.id === '2');
-        if (selectedAlbum) {
-           if(selectedFavoriteAlbum?.selected.includes(imageurl)) {
-            const updated = selectedAlbum.selected.filter((select)=>select !==imageurl)
-            handelPut('2',selectedAlbum,updated,'removed from favorite ', setSnackbarOpen ,setSnackbarMessage)
-            dispatch({ type: 'addToAlbum', payload: { albumId: '2', updated } } ); 
-           } 
-           else {
-            const updatedSelected = [...selectedAlbum.selected,imageurl ];
-            handelPut('2',selectedAlbum,updatedSelected,'added to favorite ',   setSnackbarOpen ,setSnackbarMessage)
-            dispatch({ type: 'addToAlbum', payload: { albumId: '2', updated:updatedSelected  } } ); 
-           } }
-        }
-        
-     
     return (
-        <motion.div className='px-4 pt-20 relative bg-[#f4f4f4]'>
-            {state.images && (
-                <Masonry columns={{ sm: 2, md: 3, lg: 4 }} spacing={3} >
-                    {state.images.map((image, index) => (
-                        <div key={image.id} className="relative group pt-4 ">
+        <>
+            {docs && (
+                <Masonry columns={{ sm: 2, md: 3, lg: 4 }} spacing={3}>
+                    {docs.map((image, index) => (
+                        <motion.div
+                            key={image.id}
+                            className="relative group pt-4 opacity-70"
+                            layout
+                            whileHover={{ opacity: 1 }}
+                        >
                             {selectedImages.length > 0 && (
                                 <Checkbox
                                     sx={{ position: 'absolute', left: '0', top: '-20px', zIndex: '30' }}
                                     size="small"
-                                    checked={selectedImages.some((img) => img.imageId === image.id)}
-                                    onChange={() => toggleSelected(image.id, image.url)}
+                                    checked={selectedImages.some((img) => img.id === image.id)}
+                                    onChange={() => toggleSelected(image)}
                                 />
                             )}
                             <LazyLoadImage
                                 effect='blur'
                                 src={image.url}
                                 alt={`image-${image.id}`}
-                                className="rounded-sm mx-auto h-full "
-                                onClick={(event) => handleClick(index, image.id, image.url, event)}
+                                className="rounded-sm mx-auto h-full"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1 }}
+                                onClick={(event) => handleClick(index, image, event)}
                             />
-
                             <Fab size='small' sx={{
-                              ...(state.albums && (selectedFavoriteAlbum?.selected.includes(image.url) ? {color:"#ff6f61"}:{borderColor:"#ff6f61" , border:1})),
-                                 fontSize: '1.625rem',
+                                //   ...(state.albums && (selectedFavoriteAlbum?.selected.includes(image.url) ? {color:"#ff6f61"}:{borderColor:"#ff6f61" , border:1})),
+                                fontSize: '1.625rem',
                                 position: 'absolute',
                                 top: '20px',
-                                p:1,
+                                p: 1,
                                 right: 0,
                                 opacity: 0,
                                 transition: 'opacity 0.3s ease',
                                 '&:hover': { opacity: 1 }
                             }}
-                                onClick={() =>{ favorite(image.url)}}
-                        className="group-hover:opacity-100 z-0">
+                                // onClick={() =>{ favorite(image.url)}}
+                                className="group-hover:opacity-100 z-0">
                                 <FaHeart />
                             </Fab>
-                        </div>
+                        </motion.div>
                     ))}
                 </Masonry>
             )}
 
-            <Link to="/upload">
-                <Fab
-                    sx={{ position: 'fixed', right: '1rem', bottom: '4rem', zIndex: 50, color: '#ff6f61' }}>
-                    <AddIcon />
-                </Fab>
-            </Link>
             <Suspense fallback={<div>Loading components...</div>}>
-                <ImageSlide currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} open={imageSlideopen} setOpen={setImageSlideopen} content={state.images} isImage={true} />
+                <ImageSlide currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} open={imageSlideopen} setOpen={setImageSlideopen} content={docs} isImage={true} />
             </Suspense>
 
             {selectedImages.length > 0 && (
@@ -143,23 +121,17 @@ const PictureDisplay = () => {
                         onClick={handelDeleteOpp}
                     > Delete</Button>
                     <Button sx={{ color: 'white' }}
-                        onClick={() => {  setMoveDialogOpen(true) }}> Add To Album</Button>
+                        onClick={() => { setMoveDialogOpen(true) }}> Add To Album</Button>
                 </ButtonGroup>
             )}
-            <Suspense fallback={<div>Loading components...</div>}>
+
                 <MoveToAlbumDialog
                     open={moveDialogOpen}
                     onClose={() => setMoveDialogOpen(false)}
-                    onMove={handelAdd}
+                    // onMove={handelAdd}
                 />
-            </Suspense>
-            <Snackbar open={snackbarOpen} autoHideDuration={1000} onClose={() => setSnackbarOpen(false)}>
-                <Alert onClose={() => setSnackbarOpen(false)}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
-        </motion.div>
+        </>
     );
 };
 
-export default PictureDisplay
+export default PictureDisplay;
