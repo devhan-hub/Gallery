@@ -9,11 +9,13 @@ import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
+import useAuth from '../hooks/useAuth'
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
 const Video = () => {
-  const [docs] =[]
+  const [user] = useAuth();
+  const [docs] =useFirestore('videos', user?.uid)
   const [ videoSlideoPen,sevideoSlideoPen] = useState(false);
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [SelectedVideos, setSelectedVideos] = useState([]);

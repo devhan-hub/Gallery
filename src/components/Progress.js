@@ -1,10 +1,14 @@
 import { useEffect } from 'react'
 import useStorage from '../hooks/useStorage'
 import { motion } from 'framer-motion'
+import useAuth from '../hooks/useAuth'
 
 const Progress = ({file , setFile , fileType}) => {
-  const {Progress , url} = useStorage(file  , fileType)
+  const[user] = useAuth();
 
+ 
+  const {Progress , url} = useStorage(file  , fileType , user?.uid)
+ 
   return (
     <motion.div 
     initial={{width:0}}

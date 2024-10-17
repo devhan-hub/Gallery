@@ -3,7 +3,6 @@ import { FaAngleLeft } from 'react-icons/fa6';
 import { motion } from 'framer-motion'
 import { Button, Checkbox, Snackbar, Alert  , ButtonGroup} from '@mui/material';
 import { NewAlbum } from './NewAlbum'
-import { MediaContext } from './Reducer';
 import { handelPut } from './HandelModify'
 import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
@@ -22,7 +21,6 @@ const AlbumView = () => {
   const [isImage, setIsImage] = useState(true)
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const { state, dispatch } = useContext(MediaContext);
   const [clickTimeOut, setClickTimeOut] = useState(null)
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [isMove , setIsMove] = useState(false)

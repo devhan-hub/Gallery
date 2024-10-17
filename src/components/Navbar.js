@@ -5,6 +5,8 @@ import { AppBar } from '@mui/material';
 import VideoLibraryOutlinedIcon from '@mui/icons-material/VideoLibraryOutlined';
 import PhotoAlbumOutlinedIcon from '@mui/icons-material/PhotoAlbumOutlined';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import {firebaseAuth}  from '../firebase/Config'
+import { signOut } from 'firebase/auth';
 
 
 const ListItem = ({ children, path, Icon, setPosition, isActive, setActiveItem, index }) => {
@@ -46,15 +48,14 @@ const ListItem = ({ children, path, Icon, setPosition, isActive, setActiveItem, 
 };
 
 
-export const Navbar = () => {
+ const Navbar = () => {
     const [position, setPosition] = useState({
         opacity: 0,
         left: 0,
         width: 0,
     });
     const [activeItem, setActiveItem] = useState(null);
-
-
+  
     return (
         <AppBar className="fixed h-16 grid place-content-center  z-0" sx={{ bgcolor: '#ff6f61' }}>
             <ul className="relative flex justify-between px-6 h-full items-center">
@@ -88,7 +89,9 @@ export const Navbar = () => {
                 >
                     Albums
                 </ListItem>
-
+               <button onClick={()=> signOut(firebaseAuth)}>
+                Logout
+               </button>
 
                 <motion.li
                     animate={position}
