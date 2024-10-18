@@ -8,8 +8,6 @@ import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
 import { updateDoc , doc } from 'firebase/firestore';
 import {  firebaseFirestore } from '../firebase/Config';
-
-
 const ImageSlide = React.lazy(() => import('./SlideDialog'))
 const AlbumView = ({user}) => {
   const [docs] = useFirestoreAlbum(`users/${user?.uid}/albums`);
@@ -24,11 +22,11 @@ const AlbumView = ({user}) => {
   const [clickTimeOut, setClickTimeOut] = useState(null)
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [isMove , setIsMove] = useState(false)
+  const[titel, setTitle] = useState('')
    
   const handleClickOpen = () => {
     setCreatOpen(true);
   }
-
   const handleClick = (index, albURL, event, ISimage) => {
     if (clickTimeOut) {
       clearTimeout(clickTimeOut)
@@ -72,7 +70,6 @@ const AlbumView = ({user}) => {
       updateDoc(selectedAlbumRef, {
         files:updated
       })
-
         if(!isMove)
         {
           setSelectedAlbumPhoto([])
@@ -127,7 +124,7 @@ const AlbumView = ({user}) => {
               ) : (
                
                 <img
-                src={album.files.length !== 0 ?album.files[0] : "Images/gallery.png"}
+                src={album.files.length !== 0 ?album.files[0]: "Images/gallery.png"}
                   alt={`Album ${album.id}`}
                   className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
                 />
@@ -205,9 +202,11 @@ const AlbumView = ({user}) => {
             onClick={()=> {setIsMove(false); handelDeleteOpp()} }
           > Delete</Button>
           <Button sx={{ color: 'white' }}
-            onClick={() => { setIsMove(true); setMoveDialogOpen(true) }}> Move To album</Button>
+            onClick={() => { setIsMove(true); setMoveDialogOpen(true); setTitle('Move to album')
+            }}> Move To album</Button>
           <Button sx={{ color: 'white' }}
-            onClick={() => { setIsMove(false); setMoveDialogOpen(true) }}> Copy To Album</Button>
+            onClick={() => { setIsMove(false); setMoveDialogOpen(true); setTitle('Copy to album')
+            }}> Copy To Album</Button>
         </ButtonGroup>
       )}
 
@@ -216,7 +215,8 @@ const AlbumView = ({user}) => {
           open={moveDialogOpen}
           onClose={() => setMoveDialogOpen(false)}
           onMove={handelAdd}
-          user={user}
+          userId={user?.uid}
+          titel={titel}
         />
       </Suspense>
       <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)}>

@@ -4,15 +4,15 @@ import GenericDialog from './GenericDialog';
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
 
 
-export const MoveToAlbumDialog = ({ open, onClose, onMove , user }) => {
-    const [docs] = useFirestoreAlbum(`users/${user?.uid}/albums`);
+export const MoveToAlbumDialog = ({ open, onClose, onMove , userId, titel }) => {
+    const [docs] = useFirestoreAlbum(`users/${userId}/albums`);
     const [selectedAlbumId, setSelectedAlbumId] = useState('');
 
     return (
         <GenericDialog
             open={open}
             handleClose={onClose}
-            title="Move to Album"
+            title={titel}
             onSubmit={()=> onMove(selectedAlbumId)}>
             <FormControl fullWidth>
                 <InputLabel id='album-select'>Select Album</InputLabel>

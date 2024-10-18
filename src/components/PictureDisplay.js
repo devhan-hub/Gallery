@@ -48,7 +48,7 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
 
     const handelDeleteOpp = async () => {
         selectedImages.forEach(async (image) => {
-            const fireRef = doc(firebaseFirestore, 'all-files', image.id)
+            const fireRef = doc(firebaseFirestore,`users/${user?.uid}/images/${image.id}` )
             const storgaRef = ref(firebaseStorage, image.storagePath)
             try {
                 await deleteDoc(fireRef)
@@ -64,7 +64,7 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
     }
     const handelAdd = async (albumId) => {
         const selectedImageUrl = selectedImages.map((image) => image.url);
-        const selectedAlbumRef = doc(firebaseFirestore, 'albums', albumId);
+        const selectedAlbumRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${albumId}`);
         const selectedAlbumDoc = await getDoc(selectedAlbumRef);
               if (selectedAlbumDoc.exists()) {
           const currentFiles = selectedAlbumDoc.data().files || [];
@@ -158,6 +158,9 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
                     open={moveDialogOpen}
                     onClose={() => setMoveDialogOpen(false)}
                     onMove={handelAdd}
+                    userId={user?.uid}
+                    titel={"Add to album"}
+
                 />
         </>
     );

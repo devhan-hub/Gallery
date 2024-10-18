@@ -4,6 +4,7 @@ import { onSnapshot ,collection} from 'firebase/firestore';
 const useFirestoreAlbum = (collectionName) => {
     const [docs ,setDocs]= useState(null)
     useEffect(() => {
+   
         const fetchData = async () => {
        
          const  collRef = collection(firebaseFirestore, collectionName);
