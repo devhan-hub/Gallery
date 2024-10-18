@@ -16,7 +16,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-const UploadForm = () => {
+const UploadForm = ({user}) => {
 
     const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
@@ -53,7 +53,7 @@ const UploadForm = () => {
             <div>
                 {error && <div>{error}</div>}
                 {file && <div>{file.name}</div>}
-                {file && <Progress file={file} setFile={setFile} fileType={fileType} />}
+                {file && <Progress file={file} user={user} fileType={fileType} />}
             </div>
         </form>
     )

@@ -7,7 +7,9 @@ import {AnimatePresence} from 'framer-motion'
 import PictureDisplay from './PictureDisplay';
 import Notfound from './Notfound';
 import UploadForm from './UploadForm';
-const Main = () => {
+
+const Main = ({user}) => {
+
     const location = useLocation();
     useEffect(()=> {
   
@@ -16,12 +18,12 @@ const Main = () => {
     return (  
         <div className="min-h-screen bg-gray-100 space-y-0">
           <Navbar />
-          <UploadForm/>
+          <UploadForm user={user}/>
           <AnimatePresence>
           <Routes location={location} key={location.key}>
-            <Route path='/' element={<PictureDisplay/>} />
-            <Route path='/albums' element={<AlbumView />} />
-             <Route path='/videoss' element={<Video />} />
+            <Route path='/' element={<PictureDisplay user={user}/>} />
+            <Route path='/albums' element={<AlbumView  user={user}/>} />
+             <Route path='/videoss' element={<Video  user={user}/>} />
             {/* // <Route path='*' element={<Notfound  />} /> */ }
           </Routes>
           </AnimatePresence>

@@ -6,7 +6,7 @@ import {firebaseAuth}  from '../firebase/Config'
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [user , setUser]= useState(null)
 
 const handeSignUp = (e) => {

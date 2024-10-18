@@ -11,8 +11,8 @@ import {  firebaseFirestore } from '../firebase/Config';
 
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'))
-const AlbumView = () => {
-  const [docs] = useFirestoreAlbum();
+const AlbumView = ({user}) => {
+  const [docs] = useFirestoreAlbum(`users/${user?.uid}/albums`);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [selectedAlbumPhoto, setSelectedAlbumPhoto] = useState([]);
   const [creatOpen, setCreatOpen] = useState(false)
@@ -59,7 +59,7 @@ const AlbumView = () => {
       const updated = selectedAlbum.files.filter((alb) =>
         !selectedAlbumPhoto.includes(alb)
       );
-      const selectedAlbumRef = doc(firebaseFirestore, 'albums', selectedAlbum.id);
+      const selectedAlbumRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${selectedAlbum.id}` );
       updateDoc(selectedAlbumRef, {
         files:updated
       })
@@ -68,7 +68,7 @@ const AlbumView = () => {
   const handelAdd = (albumId) => {
     let updatedAlbum = docs.find((album) => album.id === albumId);
         const updated = [...selectedAlbumPhoto, ...updatedAlbum.files];
-        const selectedAlbumRef = doc(firebaseFirestore, 'albums', albumId);
+        const selectedAlbumRef = doc(firebaseFirestore, `users/${user?.uid}/albums/${albumId}`);
       updateDoc(selectedAlbumRef, {
         files:updated
       })
@@ -106,6 +106,7 @@ const AlbumView = () => {
         <NewAlbum
           open={creatOpen}
           setOpen={setCreatOpen}
+          userId={user?.uid}
         />
         <h2 className="font-bold text-lg mb-4 text-violet-700 text-center">Albums</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center ">
@@ -215,6 +216,7 @@ const AlbumView = () => {
           open={moveDialogOpen}
           onClose={() => setMoveDialogOpen(false)}
           onMove={handelAdd}
+          user={user}
         />
       </Suspense>
       <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)}>

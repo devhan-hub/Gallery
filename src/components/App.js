@@ -1,4 +1,3 @@
-import React, { useEffect, useReducer, useState } from 'react';
 import Main from './Main';
 import LoginForm from './LoginForm'
 import useAuth from '../hooks/useAuth'
@@ -9,7 +8,7 @@ const [user] = useAuth();
      
      <div>
       {
-        user?<Main/>:<LoginForm/>
+        user?<Main user={user}/>:<LoginForm/>
       }
      </div>
   );

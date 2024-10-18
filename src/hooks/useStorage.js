@@ -42,6 +42,11 @@ const useStorage = (file  , fileType , userId) => {
                       name: 'recently',
                       files: last20Url,
                     }, { merge: true });
+                    const favoriteAddedAlbumRef = doc(firebaseFirestore, `users/${userId}/albums/favorite`);
+                    setDoc(favoriteAddedAlbumRef, {
+                        name: 'favorite',
+                        files: [],
+                      }, { merge: true });
                 })
                 setUrl(downloadURL);
 

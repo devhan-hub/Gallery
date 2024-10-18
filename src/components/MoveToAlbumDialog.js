@@ -4,8 +4,8 @@ import GenericDialog from './GenericDialog';
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
 
 
-export const MoveToAlbumDialog = ({ open, onClose, onMove }) => {
-     const[docs] =useFirestoreAlbum();
+export const MoveToAlbumDialog = ({ open, onClose, onMove , user }) => {
+    const [docs] = useFirestoreAlbum(`users/${user?.uid}/albums`);
     const [selectedAlbumId, setSelectedAlbumId] = useState('');
 
     return (

@@ -10,12 +10,10 @@ import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc, getDoc, updateDoc ,exists } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
-import useAuth from '../hooks/useAuth'
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
-const PictureDisplay = () => {
-    const [user] = useAuth();
+const PictureDisplay = ({user}) => {
 
     const [docs] = useFirestore(`users/${user?.uid}/images`);
     const [imageSlideopen, setImageSlideopen] = useState(false);
