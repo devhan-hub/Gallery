@@ -10,12 +10,14 @@ import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc, getDoc, updateDoc ,exists } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
+import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
 const PictureDisplay = ({user}) => {
+    const [docs] = useFirestore(`users/${user?.uid}/images`);  
+    const [albums] = useFirestoreAlbum(`users/${user?.uid}/albums`);
 
-    const [docs] = useFirestore(`users/${user?.uid}/images`);
     const [imageSlideopen, setImageSlideopen] = useState(false);
     const [moveDialogOpen, setMoveDialogOpen] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
@@ -46,22 +48,30 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
         }
     }
 
+ 
     const handelDeleteOpp = async () => {
-        selectedImages.forEach(async (image) => {
-            const fireRef = doc(firebaseFirestore,`users/${user?.uid}/images/${image.id}` )
-            const storgaRef = ref(firebaseStorage, image.storagePath)
-            try {
-                await deleteDoc(fireRef)
-                await deleteObject(storgaRef)
-                setSelectedImages([])
-            }
-            catch (error) {
-                setSelectedImages([])
 
-                console.error("Error deleting image:", error);
-            }
-        })
-    }
+        try {
+             for(const image of selectedImages) {
+                 const fireRef = doc(firebaseFirestore,`users/${user?.uid}/images/${image.id}`)
+                 const storgaRef = ref(firebaseStorage, image.storagePath) 
+                 
+                 for(const album of albums ) {
+                     const albRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${album.id}`)
+                     const filtedFile = album.files.filter((url)=> url !==image.url)
+                     await updateDoc(albRef, {
+                         files: filtedFile
+                       });
+                 }
+                 await deleteDoc(fireRef);
+                 await deleteObject(storgaRef);
+             }
+             setSelectedImages([]);
+         } catch (error) {
+           setSelectedImages([]);
+           console.error("Error deleting image:", error);
+         }
+       };
     const handelAdd = async (albumId) => {
         const selectedImageUrl = selectedImages.map((image) => image.url);
         const selectedAlbumRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${albumId}`);
