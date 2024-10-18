@@ -1,9 +1,8 @@
-import React, { useState, Suspense, useContext, useEffect } from 'react';
+import React, { useState, Suspense} from 'react';
 import { FaAngleLeft } from 'react-icons/fa6';
 import { motion } from 'framer-motion'
 import { Button, Checkbox, Snackbar, Alert  , ButtonGroup} from '@mui/material';
 import { NewAlbum } from './NewAlbum'
-import { handelPut } from './HandelModify'
 import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
 import { updateDoc , doc } from 'firebase/firestore';
@@ -60,7 +59,9 @@ const AlbumView = ({user}) => {
       const selectedAlbumRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${selectedAlbum.id}` );
       updateDoc(selectedAlbumRef, {
         files:updated
+
       })
+       setSelectedAlbum({ ...selectedAlbum, files: updated });
         setSelectedAlbumPhoto([])
   }
   const handelAdd = (albumId) => {
@@ -120,10 +121,8 @@ const AlbumView = ({user}) => {
                   autoPlay muted
                   className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
                 />
-
-              ) : (
-               
-                <img
+              ) : (              
+               <img
                 src={album.files.length !== 0 ?album.files[0]: "Images/gallery.png"}
                   alt={`Album ${album.id}`}
                   className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
