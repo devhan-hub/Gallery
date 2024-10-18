@@ -15,6 +15,7 @@ const useStorage = (file  , fileType , userId) => {
             (snap) => {
                 const percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
                 setProgress(percentage);
+                console.log(progress)
             }, 
             (err) => {
                 setError(err);
@@ -54,7 +55,7 @@ const useStorage = (file  , fileType , userId) => {
         );
     }, [file]);
 
-    return { progress, url, error };
+    return  [progress, url, error ];
 };
 
 export default useStorage;

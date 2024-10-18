@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import { Fab, Button } from '@mui/material';
 import Progress from './Progress';
@@ -41,7 +41,7 @@ const UploadForm = ({user}) => {
     }
     return (
 
-        <form className='flex flex-col justify-center items-center pt-20 gap-2'>
+        <form className='flex flex-col justify-center items-center pt-20 gap-2 w-full'>
             <label  >
 
                 <Button component="label" variant="contained"  >
@@ -50,10 +50,9 @@ const UploadForm = ({user}) => {
                 </Button>
             </label>
 
-            <div>
-                {error && <div>{error}</div>}
-                {file && <div>{file.name}</div>}
-                {file && <Progress file={file} user={user} fileType={fileType} />}
+            <div className='w-full px-40 flex flex-col gap-2 '>
+                {error && <div className='mx-auto'>{error}</div>}
+                {file && <Progress file={file} user={user} fileType={fileType}  setFile={setFile}/>}
             </div>
         </form>
     )

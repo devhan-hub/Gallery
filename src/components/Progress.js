@@ -1,19 +1,24 @@
 import { useEffect } from 'react'
 import useStorage from '../hooks/useStorage'
-import { motion } from 'framer-motion'
+import { motion,  } from 'framer-motion'
+import Box from '@mui/material/Box';
 
-const Progress = ({file  , fileType , user}) => {
+import LinearProgress from '@mui/material/LinearProgress';
+
+
+const Progress = ({file  , fileType , user ,setFile}) => {
 
  
-  const {Progress , url} = useStorage(file  , fileType , user?.uid)
- 
+  const [progress, url, error ] = useStorage(file  , fileType , user?.uid)
+  useEffect(()=> {
+    if(url)
+    {
+        setFile(null)
+    }
+ }, [url,setFile]) 
   return (
-    <motion.div 
-    initial={{width:0}}
-    animate={{width:Progress +'%'}}
-    className='h-5 mt-6 bg-[#efb6b2]'>
-      
-    </motion.div>
+    <LinearProgress variant="determinate" value={progress} />
+
   )
 }
 
