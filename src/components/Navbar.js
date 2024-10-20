@@ -37,7 +37,7 @@ const ListItem = ({ children, path, Icon, setPosition, isActive, setActiveItem, 
         }
             ref={ref}
             className={`cursor-pointer relative z-10 flex items-center gap-2 px-2 
-        transition-colors duration-300`}
+               transition-colors duration-300`}
           
             onClick={handleClick}
         >

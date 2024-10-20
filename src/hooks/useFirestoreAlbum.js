@@ -8,8 +8,6 @@ const useFirestoreAlbum = (collectionName) => {
         const fetchData = async () => {
        
          const  collRef = collection(firebaseFirestore, collectionName);
-      
-      
           const unsub = onSnapshot(collRef, (snap) => {
             let documents = [];
       

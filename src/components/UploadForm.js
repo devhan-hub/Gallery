@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import { Fab, Button } from '@mui/material';
 import Progress from './Progress';
-import AddIcon from '@mui/icons-material/Add';
+import {v4 as uuidv4} from 'uuid'
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -17,12 +17,12 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const UploadForm = ({user}) => {
-
     const [file, setFile] = useState(null);
     const [error, setError] = useState(null);
     const [fileType , setFileType] = useState(null)
-    const types = ['image/png', 'image/jpeg' , 'video/mp4'];
+    const[id , setId]= useState(null)
 
+    const types = ['image/png', 'image/jpeg' , 'video/mp4'];
 
     const handelChange = (e) => {
         e.preventDefault();
@@ -30,12 +30,14 @@ const UploadForm = ({user}) => {
 
         if (selected && types.includes(selected.type)) {
             setFile(selected)
+            setId(uuidv4());
             setError('')
             const mimeType =selected.type;
            setFileType(mimeType.split('/')[0]);
         }
         else {
             setFile(null)
+            setId(null)
             setError('pls seectect an image file (png or jpeg)')
         }
     }
@@ -52,7 +54,7 @@ const UploadForm = ({user}) => {
 
             <div className='w-full px-40 flex flex-col gap-2 '>
                 {error && <div className='mx-auto'>{error}</div>}
-                {file && <Progress file={file} user={user} fileType={fileType}  setFile={setFile}/>}
+                {file && <Progress file={file} user={user} fileType={fileType}  setFile={setFile} id={id}/>}
             </div>
         </form>
     )
