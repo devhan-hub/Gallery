@@ -1,105 +1,54 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { AppBar } from '@mui/material';
+import { AppBar, Button, ListItem } from '@mui/material';
 import VideoLibraryOutlinedIcon from '@mui/icons-material/VideoLibraryOutlined';
 import PhotoAlbumOutlinedIcon from '@mui/icons-material/PhotoAlbumOutlined';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
-import {firebaseAuth}  from '../firebase/Config'
+import { firebaseAuth } from '../firebase/Config'
 import { signOut } from 'firebase/auth';
 
+const Navbar = () => {
 
-const ListItem = ({ children, path, Icon, setPosition, isActive, setActiveItem, index }) => {
-    const ref = useRef(null);
-    const navigate = useNavigate();
-    const handleHover = () => {
-        if (!ref.current) return;
-        const { width, left } = ref.current.getBoundingClientRect();
-        setPosition({
-            width,
-            left,
-            opacity: 1,
-        });
-    };
-
-    const handleClick = () => {
-        handleHover();
-        setActiveItem(index);
-        navigate(path);
-    };
-
+    const [activeItem, setActiveItem] = useState(0);
+    let navigator = useNavigate();
     return (
-        <motion.li
-        whileHover={
-            {
-               scale:1.1
-            }
-        }
-            ref={ref}
-            className={`cursor-pointer relative z-10 flex items-center gap-2 px-2 
-               transition-colors duration-300`}
-          
-            onClick={handleClick}
-        >
-            <Icon />
-            {children}
-        </motion.li>
-    );
-};
+        <AppBar className="fixed h-16 grid place-content-center pr-6 z-0" sx={{ bgcolor: '#ff6f61' }}>
+            <div className="relative flex justify-between px-6 h-full items-center overflow-clip">
 
+                <img src='Images/logo5.png' className='size-24 bg-white p-2 -ml-5'></img>
 
- const Navbar = () => {
-    const [position, setPosition] = useState({
-        opacity: 0,
-        left: 0,
-        width: 0,
-    });
-    const [activeItem, setActiveItem] = useState(null);
-  
-    return (
-        <AppBar className="fixed h-16 grid place-content-center  z-0" sx={{ bgcolor: '#ff6f61' }}>
-            <ul className="relative flex justify-between px-6 h-full items-center">
-                <ListItem
-                    path="/"
-                    Icon={PhotoSizeSelectActualIcon}
-                    setPosition={setPosition}
-                    isActive={activeItem === 0}
-                    setActiveItem={setActiveItem}
-                    index={0}
-                >
-                    Photos
-                </ListItem>
-                <ListItem
-                    path="/videoss"
-                    Icon={VideoLibraryOutlinedIcon}
-                    setPosition={setPosition}
-                    isActive={activeItem === 1}
-                    setActiveItem={setActiveItem}
-                    index={1}
-                >
-                    Videos
-                </ListItem>
-                <ListItem
-                    path="/albums"
-                    Icon={PhotoAlbumOutlinedIcon}
-                    setPosition={setPosition}
-                    isActive={activeItem === 2}
-                    setActiveItem={setActiveItem}
-                    index={2}
-                >
-                    Albums
-                </ListItem>
-               <button onClick={()=> signOut(firebaseAuth)}>
-                Logout
-               </button>
+                <ul className="relative flex justify-between px-6 h-full items-center text-white md:gap-6 lg:gap-8 xl:gap-10 md:text-[20px] ">
 
-                <motion.li
-                    animate={position}
-                    className="absolute bottom-0 h-1 z-0 bg-white rounded-sm"
-                    style={{ left: position.left, width: position.width }}
-                    transition={{ duration: 0.3 }}
-                />
-            </ul>
+                    <ListItem
+                        className={`${activeItem === 0 ? 'bg-[white] text-[#ff6f61]' : ''} rounded-md cursor-pointer space-x-1`}
+                        onClick={() => { setActiveItem(0); navigator("/") }}
+                    >
+                        <PhotoSizeSelectActualIcon />
+                        <span>Photos</span>
+                    </ListItem>
+                    <ListItem
+                        className={`${activeItem === 1 ? 'bg-[white] text-[#ff6f61]' : ''} rounded-md cursor-pointer space-x-1`}
+                        onClick={() => { setActiveItem(1); navigator('/videoss') }}
+                    >
+                        <VideoLibraryOutlinedIcon />
+                        <span>Videos</span>
+                    </ListItem>
+                    <ListItem
+                        className={`${activeItem === 2 ? 'bg-[white] text-[#ff6f61]' : ''} rounded-md cursor-pointer space-x-1`}
+                        path="/albums"
+
+                        onClick={() => { setActiveItem(2); navigator("/albums") }}
+
+                    >
+                        <PhotoAlbumOutlinedIcon />
+                        <span>Albums</span>
+                    </ListItem>
+                </ul>
+                <Button onClick={() => signOut(firebaseAuth)} sx={{ color: 'white', fontWeight: 800, fontSize: 16 }} className='italic font-extrabold'>
+                    Logout
+                </Button>
+            </div>
         </AppBar>
     );
 };
