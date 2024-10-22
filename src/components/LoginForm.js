@@ -40,11 +40,20 @@ const handelSignIn = (e) => {
 };
   return (
     <div  className=''>
+      <div className='flex justify-between items-center px-4'>
        <a href="" className=' ml-2 inline-block '>
-       <img src="Images/logo5.png" alt="" className=' w-28'/>
-
+       <img src="Images/logo5.png" alt="" className=' w-28'/> 
        </a>
-<Container maxWidth='sm' className='mt-24 shadow-2xl '>      <Box
+       <a href="#sign" className='md:hidden text-xl text-[#ff6f61] font-extrabold'>Sign In</a>
+       </div>
+       <div className='flex flex-col md:flex-row items-center px-10 md:px-6 lg:px-10'>
+        <div>
+          <p className='text-3xl mx-auto italic text-[#ff6f61] p-2 text-center md:mt-0 mt-8'>Turn Moments into Memories. Sign Up to Start.</p>
+          <img src="Images/gallery2.jpg" alt="" />
+        </div>
+     
+       
+<Container maxWidth='sm' className='mt-24 shadow-2xl ' id='sign'>      <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -173,6 +182,7 @@ const handelSignIn = (e) => {
         </form>
       </Box>
     </Container>
+    </div>
     </div>
   );
 };
