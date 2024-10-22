@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
-import { Fab, Button } from '@mui/material';
+import { Fab, Button  } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+
 import Progress from './Progress';
 import {v4 as uuidv4} from 'uuid'
 
@@ -46,10 +48,11 @@ const UploadForm = ({user}) => {
         <form className='flex flex-col justify-center items-center pt-20 gap-2 w-full'>
             <label  >
 
-                <Button component="label" variant="contained"  >
-                    UPLOAD FILES
-                    <VisuallyHiddenInput type='file' onChange={handelChange} />
-                </Button>
+            <Fab   sx={{backgroundColor:"#ff6f61", color:'white' , transition:'background-color 0.3s ease','&:active':{backgroundColor:'#d04a3d'} ,'&:hover':{backgroundColor:'#e55a4f'}} }  size='small' component='label' >
+  <AddIcon />
+  <VisuallyHiddenInput type='file' onChange={handelChange} />
+
+</Fab>
             </label>
 
             <div className='w-full px-40 flex flex-col gap-2 '>

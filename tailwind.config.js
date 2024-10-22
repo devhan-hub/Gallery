@@ -9,6 +9,9 @@ module.exports = {
       fontFamily:{
         handi:'"Handlee", cursive',
 
+      },
+      backgroundImage:{
+        // bg:"url('Images/gallery.jpg')",
       }
     },
   },

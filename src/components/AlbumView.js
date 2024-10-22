@@ -1,14 +1,16 @@
-import React, { useState, Suspense} from 'react';
+import React, { useState, Suspense } from 'react';
 import { FaAngleLeft } from 'react-icons/fa6';
 import { motion } from 'framer-motion'
-import { Button, Checkbox, Snackbar, Alert  , ButtonGroup} from '@mui/material';
+import { Button, Checkbox, Snackbar, Alert, Fab, ButtonGroup } from '@mui/material';
 import { NewAlbum } from './NewAlbum'
 import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
-import { updateDoc , doc } from 'firebase/firestore';
-import {  firebaseFirestore } from '../firebase/Config';
+import { updateDoc, doc } from 'firebase/firestore';
+import { firebaseFirestore } from '../firebase/Config';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+
 const ImageSlide = React.lazy(() => import('./SlideDialog'))
-const AlbumView = ({user}) => {
+const AlbumView = ({ user }) => {
   const [docs] = useFirestoreAlbum(`users/${user?.uid}/albums`);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [selectedAlbumPhoto, setSelectedAlbumPhoto] = useState([]);
@@ -20,9 +22,9 @@ const AlbumView = ({user}) => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [clickTimeOut, setClickTimeOut] = useState(null)
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
-  const [isMove , setIsMove] = useState(false)
-  const[titel, setTitle] = useState('')
-   
+  const [isMove, setIsMove] = useState(false)
+  const [titel, setTitle] = useState('')
+
   const handleClickOpen = () => {
     setCreatOpen(true);
   }
@@ -53,32 +55,31 @@ const AlbumView = ({user}) => {
   };
 
   const handelDeleteOpp = () => {
-      const updated = selectedAlbum.files.filter((alb) =>
-        !selectedAlbumPhoto.includes(alb)
-      );
-      const selectedAlbumRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${selectedAlbum.id}` );
-      updateDoc(selectedAlbumRef, {
-        files:updated
+    const updated = selectedAlbum.files.filter((alb) =>
+      !selectedAlbumPhoto.includes(alb)
+    );
+    const selectedAlbumRef = doc(firebaseFirestore, `users/${user?.uid}/albums/${selectedAlbum.id}`);
+    updateDoc(selectedAlbumRef, {
+      files: updated
 
-      })
-       setSelectedAlbum({ ...selectedAlbum, files: updated });
-        setSelectedAlbumPhoto([])
+    })
+    setSelectedAlbum({ ...selectedAlbum, files: updated });
+    setSelectedAlbumPhoto([])
   }
   const handelAdd = (albumId) => {
     let updatedAlbum = docs.find((album) => album.id === albumId);
-        const updated = [...selectedAlbumPhoto, ...updatedAlbum.files];
-        const selectedAlbumRef = doc(firebaseFirestore, `users/${user?.uid}/albums/${albumId}`);
-      updateDoc(selectedAlbumRef, {
-        files:updated
-      })
-        if(!isMove)
-        {
-          setSelectedAlbumPhoto([])
-        }
-        else {
-          handelDeleteOpp()
-        }
-}
+    const updated = [...selectedAlbumPhoto, ...updatedAlbum.files];
+    const selectedAlbumRef = doc(firebaseFirestore, `users/${user?.uid}/albums/${albumId}`);
+    updateDoc(selectedAlbumRef, {
+      files: updated
+    })
+    if (!isMove) {
+      setSelectedAlbumPhoto([])
+    }
+    else {
+      handelDeleteOpp()
+    }
+  }
   const ContainerMotion = {
     exit: {
       x: '-100vw',
@@ -87,20 +88,21 @@ const AlbumView = ({user}) => {
   }
   if (!selectedAlbum) {
     return (
-      
+
       <motion.div
         variants={ContainerMotion}
         exit='exit'
         className="p-4 mt-2 pt-28 space-y-10 relative">
-     
-        <Button
-          variant="contained"
-          onClick={handleClickOpen}
-          sx={{ position: 'absolute', right: '1.05rem', top: '5rem' }}
-        >
 
+        <Fab
+          variant="extended"
+          onClick={handleClickOpen}
+          sx={{ position: 'absolute', right: '1.05rem', top: '5rem', backgroundColor: '#ff6f61', color: 'white', borderRadius: 3 }}
+        >
+          <LibraryAddIcon sx={{ mr: 1 }} />
           Create
-        </Button>
+        </Fab>
+        
         <NewAlbum
           open={creatOpen}
           setOpen={setCreatOpen}
@@ -109,21 +111,21 @@ const AlbumView = ({user}) => {
         <h2 className="font-bold text-lg mb-4 text-violet-700 text-center">Albums</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center ">
           {docs && (docs.map(album => (
-      
+
             <div
               key={album.id}
               className="relative cursor-pointer flex sm:flex-col items-center mb-6 break-inside-avoid px-20"
-              onClick={() =>{ setSelectedAlbum(album)}}
+              onClick={() => { setSelectedAlbum(album) }}
             >
               {(/\.(mp4)$/i.test(album.files[0])) ? (
                 <video
-                  src={album.files.length !== 0 ?album.files[0] : "Video/all.mp4"}
+                  src={album.files.length !== 0 ? album.files[0] : "Video/all.mp4"}
                   autoPlay muted
                   className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
                 />
-              ) : (              
-               <img
-                src={album.files.length !== 0 ?album.files[0]: "Images/gallery.png"}
+              ) : (
+                <img
+                  src={album.files.length !== 0 ? album.files[0] : "Images/gallery.png"}
                   alt={`Album ${album.id}`}
                   className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
                 />
@@ -140,7 +142,7 @@ const AlbumView = ({user}) => {
       </motion.div>
     );
   }
-   return (
+  return (
     <motion.div
       variants={ContainerMotion}
       exit='exit'
@@ -158,7 +160,7 @@ const AlbumView = ({user}) => {
       </button>
 
       <div className=" md:columns-2 lg:columns-3 gap-6 ">
-        {selectedAlbum.files.map((file , index ) => (
+        {selectedAlbum.files.map((file, index) => (
           <div key={index} className="group mb-8 group md:mb-10 shadow-xl relative pt-4">
             {selectedAlbumPhoto.length > 0 && (
               <Checkbox
@@ -198,13 +200,15 @@ const AlbumView = ({user}) => {
       {selectedAlbumPhoto.length > 0 && (
         <ButtonGroup className='flex fixed bottom-0 right-0 mx-auto  gap-4 p-2 justify-center' sx={{ bgcolor: '#ff6f61' }}>
           <Button sx={{ color: 'white' }}
-            onClick={()=> {setIsMove(false); handelDeleteOpp()} }
+            onClick={() => { setIsMove(false); handelDeleteOpp() }}
           > Delete</Button>
           <Button sx={{ color: 'white' }}
-            onClick={() => { setIsMove(true); setMoveDialogOpen(true); setTitle('Move to album')
+            onClick={() => {
+              setIsMove(true); setMoveDialogOpen(true); setTitle('Move to album')
             }}> Move To album</Button>
           <Button sx={{ color: 'white' }}
-            onClick={() => { setIsMove(false); setMoveDialogOpen(true); setTitle('Copy to album')
+            onClick={() => {
+              setIsMove(false); setMoveDialogOpen(true); setTitle('Copy to album')
             }}> Copy To Album</Button>
         </ButtonGroup>
       )}

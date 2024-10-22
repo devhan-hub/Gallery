@@ -6,7 +6,7 @@ import {firebaseAuth}  from '../firebase/Config'
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(null);
   const [user , setUser]= useState(null)
 
 const handeSignUp = (e) => {
@@ -39,25 +39,28 @@ const handelSignIn = (e) => {
     });
 };
   return (
-    <Container maxWidth='sm' className='mt-24'>
-      <Box
+    <div  className=''>
+       <a href="" className=' ml-2 inline-block '>
+       <img src="Images/logo5.png" alt="" className=' w-28'/>
+
+       </a>
+<Container maxWidth='sm' className='mt-24 shadow-2xl '>      <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           marginTop: 8,
-          padding: 3,
-          border: '1px solid lightgray',
+          padding: 2,
           borderRadius: '8px',
           backgroundColor: 'white'
         }}
       >
         <Typography variant="h5" gutterBottom sx={{ color: '#ff6f61' }}>
-          {isLogin ? <span>Sign In</span> : <span>Sign Up</span>}
+          {isLogin ? <span>Sign In</span> : <span>Create new account</span>}
         </Typography>
         
-        <form  className='w-full space-y-8 p-2'>
+        <form  className='w-full space-y-8 p-2 '>
           <TextField
             required
             id="outlined-required"
@@ -170,6 +173,7 @@ const handelSignIn = (e) => {
         </form>
       </Box>
     </Container>
+    </div>
   );
 };
 

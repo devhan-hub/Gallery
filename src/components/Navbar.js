@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,Link } from 'react-router-dom';
 import { AppBar, Button, ListItem } from '@mui/material';
 import VideoLibraryOutlinedIcon from '@mui/icons-material/VideoLibraryOutlined';
 import PhotoAlbumOutlinedIcon from '@mui/icons-material/PhotoAlbumOutlined';
@@ -16,7 +16,7 @@ const Navbar = () => {
         <AppBar className="fixed h-16 grid place-content-center pr-6 z-0" sx={{ bgcolor: '#ff6f61' }}>
             <div className="relative flex justify-between px-6 h-full items-center overflow-clip">
 
-                <img src='Images/logo5.png' className='size-24 bg-white p-2 -ml-5'></img>
+                <Link path=''> <img src='Images/logo5.png' className='size-24 bg-white p-2 -ml-5'></img></Link>
 
                 <ul className="relative flex justify-between px-6 h-full items-center text-white md:gap-6 lg:gap-8 xl:gap-10 md:text-[20px] ">
 

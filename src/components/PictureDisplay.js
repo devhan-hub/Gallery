@@ -11,13 +11,13 @@ import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc, getDoc, updateDoc ,exists } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
+import UploadForm from './UploadForm';
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
 const PictureDisplay = ({user}) => {
     const [docs] = useFirestore(`users/${user?.uid}/images`);  
     const [albums] = useFirestoreAlbum(`users/${user?.uid}/albums`);
-
     const [imageSlideopen, setImageSlideopen] = useState(false);
     const [moveDialogOpen, setMoveDialogOpen] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
@@ -103,6 +103,8 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
     }
     return (
         <>
+                  <UploadForm user={user}/>
+
             {docs && (
                 <Masonry columns={{ sm: 2, md: 3, lg: 4 }} spacing={3}>
                     {docs.map((image, index) => (

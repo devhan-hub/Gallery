@@ -9,6 +9,7 @@ import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
+import UploadForm from './UploadForm';
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
@@ -62,6 +63,8 @@ const Video = ({user}) => {
 
   return (
     <>
+        <UploadForm user={user}/>
+
       {docs && (
         <Masonry columns={{ sm: 2, md: 3, lg: 4 }} spacing={3}>
           {docs.map((video, index) => (

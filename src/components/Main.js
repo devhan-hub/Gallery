@@ -6,7 +6,6 @@ import { Route, Routes , useLocation} from 'react-router-dom';
 import {AnimatePresence} from 'framer-motion'
 import PictureDisplay from './PictureDisplay';
 import Notfound from './Notfound';
-import UploadForm from './UploadForm';
 
 const Main = ({user}) => {
 
@@ -18,7 +17,6 @@ const Main = ({user}) => {
     return (  
         <div className="min-h-screen bg-gray-100 space-y-0">
           <Navbar />
-          <UploadForm user={user}/>
           <AnimatePresence>
           <Routes location={location} key={location.key}>
             <Route path='/' element={<PictureDisplay user={user}/>} />
