@@ -110,7 +110,7 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
                     {docs.map((image, index) => (
                         <motion.div
                             key={image.id}
-                            className="relative group pt-4 opacity-70"
+                            className="relative group pt-4 opacity-95 shadow-md p-2"
                             layout
                             whileHover={{ opacity: 1 }}
                         >
@@ -126,7 +126,7 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
                                 effect='blur'
                                 src={image.url}
                                 alt={`image-${image.id}`}
-                                className="rounded-sm mx-auto h-full"
+                                className="rounded-sm mx-auto h-full "
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 1 }}
