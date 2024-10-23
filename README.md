@@ -115,4 +115,4 @@ Why wait? Join us and keep your memories organized and accessible!
     - `createdAt`: Timestamp (Album creation date)
 
      ## Authors
-      #Hanan Abdushikur -[GitHub](https://github.com/devhan-hub)/[LinkedIn](linkedin.com/in/hanan-abdulshikur)
+      #Hanan Abdushikur -[GitHub](https://github.com/devhan-hub)/[LinkedIn](https://linkedin.com/in/hanan-abdulshikur)
