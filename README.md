@@ -1,70 +1,118 @@
-# Getting Started with Create React App
+# RikhaGallery
+![logo6](https://github.com/user-attachments/assets/19e69f13-3de6-4a4d-9d99-72e4eb05f6d7)
+## Live
+[rikha-gallery.app](url)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Screenshots
+<img src="https://github.com/user-attachments/assets/a56af569-9063-44b0-a141-ae87faf2e58d" alt="Screenshot 1" width="400" />
 
-In the project directory, you can run:
+<img src="https://github.com/user-attachments/assets/87593d19-9c57-40f1-a581-ba34dbd276db" alt="Screenshot 2" width="400" />
 
-### `npm start`
+<img src="https://github.com/user-attachments/assets/49a0a09b-f908-4117-8240-ba6acec0d4fa" alt="Upload PNG" width="400" />
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+<img src="https://github.com/user-attachments/assets/0579c61c-3db7-463f-9269-15e99839b5dd" alt="Screenshot 4" width="400" />
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+<img src="https://github.com/user-attachments/assets/78cd6f2c-21ae-4df2-ad8d-6a11c085e924" alt="Screenshot 5" width="400" />
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+<img src="https://github.com/user-attachments/assets/bdd02043-23e1-4600-a671-6760137e02e7" alt="Side" width="400" />
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Table of Contents
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Technology Stack](#technology-stack)
+4. [Project Structure](#project-structure)
+5. [Setup and Installation](#setup-and-installation)
+6. [Database Schema](#Database-Schema)
+7. [Authors](#Authors)
+8. License
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Introduction
 
-### `npm run eject`
+Imagine this: You’ve captured the perfect sunset or a fun night with friends, but those precious memories are scattered across your device. **RikhaGallery!** This web app transforms how you store and share your media. 
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+With just a few clicks, you can upload photos and videos, create personalized albums, and enjoy a slideshow that brings your memories to life. Plus, managing your media is a breeze—you can move and copy items between albums in seconds. 
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Why wait? Join us and keep your memories organized and accessible!
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Features
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **User Authentication**: sign-in , sign-up , logout.
+- **Photo and Video Upload**: Upload images and videos with ease.
+- **Manage Images and Videos**:
+  - Delete unwanted images or videos.
+  - Add any image or video to albums.
+- **Albums**:
+  - Create new albums to organize your media.
+  - View album content, delete albums, and manage album items.
+  - Move or copy items between albums.
+- **Slideshow**: View individual images or videos in slideshow mode for a better experience.
 
-## Learn More
+  ## Technology Stack
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Database**: Firestore (NoSQL Database)
+- **Frontend**: React +Tailwind CSS
+- **Authentication**: Firebase Authentication
+- **Hosting**: Vercel (for frontend deployment)
+- **Storage**: Firebase Storage (for images and videos)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+##Project Structure
+ 
+## Setup and installation
+1.  **clone the repository**
 
-### Code Splitting
+ git clone https://github.com/devhan-hub/Gallery.git
+ 
+3. **Navigate into the Directory**
+   cd Gallery
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+ 3. **Install dependencies**
+    
+      npm install
+    or
+      yarn install
+    
+ 5. **Run the Appication**
+   npm run
+    or
+    yarn run
+    
+## Database Schema
 
-### Analyzing the Bundle Size
+### User Collection
+- **Collection Name**: `users`
+  - **Document ID**: `userId`
+    - `_id`: String (User ID)
+    - `name`: String (User's name)
+    - `email`: String (User's email)
+    - `password`: String (Hashed password)
+    - `created_at`: Timestamp (Account creation date)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Media Collections
+- **Photos Collection**: `users/{userId}/photos`
+  - **Document ID**: `photoId`
+    - `url`: String (Download URL for the photo)
+    - `createdAt`: Timestamp (Upload date)
+    - `type`: String (Type of media, e.g., 'photo')
+    - `storagePath`: String (Path in Firebase Storage)
 
-### Making a Progressive Web App
+- **Videos Collection**: `users/{userId}/videos`
+  - **Document ID**: `videoId`
+    - `url`: String (Download URL for the video)
+    - `createdAt`: Timestamp (Upload date)
+    - `type`: String (Type of media, e.g., 'video')
+    - `storagePath`: String (Path in Firebase Storage)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Albums Collection
+- **Collection Path**: `users/{userId}/albums`
+  - **Document ID**: `albumId`
+    - `name`: String (Album name)
+    - `files`: Array of Strings (URLs of media in the album)
+    - `ids`: Array of Strings (IDs of media in the album)
+    - `createdAt`: Timestamp (Album creation date)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+     ## Authors
+      #Hanan Abdushikur -[GitHub](https://github.com/devhan-hub)/[LinkedIn](https://linkedin.com/in/hanan-abdulshikur)
