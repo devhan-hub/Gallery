@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import { Fab, Button, ButtonGroup, Snackbar, Alert, Checkbox } from '@mui/material';
+import { Fab, Button, ButtonGroup, Snackbar, Alert, Checkbox, Typography } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc, getDoc, updateDoc ,exists } from "firebase/firestore"
@@ -103,8 +103,14 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
     }
     return (
         <>
-                  <UploadForm user={user}/>
-
+                  {docs.length !==0  && <UploadForm user={user}/>}
+            {docs.length ===0 &&(
+                <div className='flex flex-col  items-center justify-center pt-20'>
+                <Typography variant='h3' className='pt-10 px-4  self-start'>Welcome To Rikha Gallery!</Typography>
+               <Typography variant='h5' className='pt-10 px-4 self-start'>Get started by uploading your first image!</Typography>
+              <UploadForm user={user}/>
+                                </div>
+            )}
             {docs && (
                 <Masonry columns={{ sm: 2, md: 3, lg: 4 }} spacing={3}>
                     {docs.map((image, index) => (

@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       fontFamily:{
         handi:'"Handlee", cursive',
+        robotothin:' "Dancing Script", cursive'
 
       },
       backgroundImage:{

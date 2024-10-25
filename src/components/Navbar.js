@@ -16,7 +16,7 @@ const Navbar = () => {
         <AppBar className="fixed h-16 grid place-content-center pr-6 z-0" sx={{ bgcolor: '#ff6f61' }}>
             <div className="relative flex justify-between px-6 h-full items-center overflow-clip">
 
-                <Link path=''> <img src='Images/logo5.png' className='size-24 bg-white p-2 -ml-5'></img></Link>
+                <Link path=''> <img src='Images/logow.png' className='max-w-32 md:max-w-44 -ml-5'></img></Link>
 
                 <ul className="relative flex justify-between px-6 h-full items-center text-white md:gap-6 lg:gap-8 xl:gap-10 md:text-[20px] ">
 

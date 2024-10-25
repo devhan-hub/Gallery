@@ -97,7 +97,7 @@ const AlbumView = ({ user }) => {
         <Fab
           variant="extended"
           onClick={handleClickOpen}
-          sx={{ position: 'absolute', right: '1.05rem', top: '5rem', backgroundColor: '#ff6f61', color: 'white', borderRadius: 3 }}
+          sx={{ position: 'absolute', right: '1.05rem', top: '5rem', backgroundColor: '#ff6f61', color: 'white', borderRadius: 3 , '&:hover':{bgcolor:'#ff6f61', color:'white' , scale:'.9'}}}
         >
           <LibraryAddIcon sx={{ mr: 1 }} />
           Create
