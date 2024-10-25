@@ -1,23 +1,18 @@
 # RikhaGallery
-![logo6](https://github.com/user-attachments/assets/19e69f13-3de6-4a4d-9d99-72e4eb05f6d7)
+![logow](https://github.com/user-attachments/assets/7b236039-cd87-4318-bab1-2ab98364244d)
+
 ## Live
 [rikha-gallery.app](url)
 
 
 ## Screenshots
-<img src="https://github.com/user-attachments/assets/a56af569-9063-44b0-a141-ae87faf2e58d" alt="Screenshot 1" width="400" />
+<img width="952" alt="image" src="https://github.com/user-attachments/assets/34c40c06-2be0-441e-a9f4-0fcc7c4eb137">
+<img width="949" alt="image" src="https://github.com/user-attachments/assets/19f99111-a3e5-40f5-abc0-ffbf47e970a2">
+<img width="929" alt="image" src="https://github.com/user-attachments/assets/8ffd4261-d02f-499b-9fb9-71b437633414">
+<img width="953" alt="image" src="https://github.com/user-attachments/assets/c003dca9-85ce-49c0-8019-e1b1364b6fdf">
+<img width="942" alt="image" src="https://github.com/user-attachments/assets/d5ea059b-6a2e-40e7-8ac8-eee0b313b261">
+<img width="950" alt="image" src="https://github.com/user-attachments/assets/15828d43-fe70-4b10-a848-2ca50ff87585">
 
-<img src="https://github.com/user-attachments/assets/87593d19-9c57-40f1-a581-ba34dbd276db" alt="Screenshot 2" width="400" />
-
-<img src="https://github.com/user-attachments/assets/49a0a09b-f908-4117-8240-ba6acec0d4fa" alt="Upload PNG" width="400" />
-
-<img src="https://github.com/user-attachments/assets/0579c61c-3db7-463f-9269-15e99839b5dd" alt="Screenshot 4" width="400" />
-
-
-<img src="https://github.com/user-attachments/assets/78cd6f2c-21ae-4df2-ad8d-6a11c085e924" alt="Screenshot 5" width="400" />
-
-
-<img src="https://github.com/user-attachments/assets/bdd02043-23e1-4600-a671-6760137e02e7" alt="Side" width="400" />
 
 ## Table of Contents
 
@@ -26,9 +21,9 @@
 3. [Technology Stack](#technology-stack)
 4. [Project Structure](#project-structure)
 5. [Setup and Installation](#setup-and-installation)
-6. [Database Schema](#Database-Schema)
-7. [Authors](#Authors)
-8. License
+6. [Database Schema](#database-Schema)
+7. [Authors](#authors)
+8. [License](#license)
 
 ## Introduction
 
@@ -59,14 +54,58 @@ Why wait? Join us and keep your memories organized and accessible!
 - **Hosting**: Vercel (for frontend deployment)
 - **Storage**: Firebase Storage (for images and videos)
 
-##Project Structure
- 
+## Project Structure
+   ```plaintext
+├── README.md
+├── package-lock.json
+├── package.json
+├── public
+│   ├── Images
+│   │   ├── galery3.png
+│   │   ├── gallery.png
+│   │   └── logow.png
+│   ├── favicon.ico
+│   ├── index.html
+│   ├── logo192.png
+│   ├── logo512.png
+│   ├── manifest.json
+│   └── robots.txt
+├── src
+│   ├── components
+│   │   ├── AlbumView.js
+│   │   ├── App.js
+│   │   ├── GenericDialog.js
+│   │   ├── HandelModify.js
+│   │   ├── LoginForm.js
+│   │   ├── Main.js
+│   │   ├── MoveToAlbumDialog.js
+│   │   ├── Navbar.js
+│   │   ├── NewAlbum.js
+│   │   ├── Notfound.js
+│   │   ├── PictureDisplay.js
+│   │   ├── Progress.js
+│   │   ├── SlideDialog.js
+│   │   ├── UploadForm.js
+│   │   ├── Validate.js
+│   │   └── Video.js
+│   ├── firebase
+│   │   └── Config.js
+│   ├── hooks
+│   │   ├── useAuth.js
+│   │   ├── useFirestore.js
+│   │   ├── useFirestoreAlbum.js
+│   │   └── useStorage.js
+│   ├── index.css
+│   └── index.js
+└── tailwind.config.js
+```  
 ## Setup and installation
 1.  **clone the repository**
 
  git clone https://github.com/devhan-hub/Gallery.git
  
-3. **Navigate into the Directory**
+3. **Navigate into the Directory**]
+ 
    cd Gallery
 
  3. **Install dependencies**
@@ -76,6 +115,7 @@ Why wait? Join us and keep your memories organized and accessible!
       yarn install
     
  5. **Run the Appication**
+
    npm run
     or
     yarn run
@@ -115,4 +155,7 @@ Why wait? Join us and keep your memories organized and accessible!
     - `createdAt`: Timestamp (Album creation date)
 
      ## Authors
-      #Hanan Abdushikur -[GitHub](https://github.com/devhan-hub)/[LinkedIn](https://linkedin.com/in/hanan-abdulshikur)
+       Hanan Abdushikur -[GitHub](https://github.com/devhan-hub)/[LinkedIn](https://linkedin.com/in/hanan-abdulshikur)
+
+    ## License
+      Copyright (C) Licensed under the MIT License
