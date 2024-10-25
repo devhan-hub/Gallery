@@ -60,7 +60,6 @@ const Video = ({user}) => {
       }
     })
   }
-
   return (
     <>
         <UploadForm user={user}/>
