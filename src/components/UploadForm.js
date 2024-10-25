@@ -45,7 +45,7 @@ const UploadForm = ({user}) => {
     }
     return (
 
-        <form className='flex flex-col justify-center items-center pt-20 gap-2 w-full'>
+        <form className='flex flex-col justify-center items-center pt-2 gap-2 w-full'>
             <label  >
 
             <Fab   sx={{backgroundColor:"#ff6f61", color:'white' , transition:'background-color 0.3s ease','&:active':{backgroundColor:'#d04a3d'} ,'&:hover':{backgroundColor:'#e55a4f'}} }  size='small' component='label' >
