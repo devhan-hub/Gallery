@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense , useEffect } from 'react';
 import useFirestore from '../hooks/useFirestore';
 import Masonry from '@mui/lab/Masonry';
 import { motion } from 'framer-motion';
@@ -18,14 +18,27 @@ import 'react-toastify/dist/ReactToastify.css';;
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
 const PictureDisplay = ({user}) => {
-    const [docs] = useFirestore(`users/${user?.uid}/images`);  
-    const [albums] = useFirestoreAlbum(`users/${user?.uid}/albums`);
+    const [docs] = useFirestore(`users/${user?.uid}/images`); 
+    const [albums] = useFirestoreAlbum(`users/${user?.uid}/albums`);  
     const [imageSlideopen, setImageSlideopen] = useState(false);
     const [moveDialogOpen, setMoveDialogOpen] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
     const [clickTimeOut, setClickTimeOut] = useState(null)
     const [currentIndex, setCurrentIndex] = useState(null);
-const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
+    const [currentFiles, setCurrentFiles] = useState([]);
+
+    useEffect(() => {
+       
+        const fetchFavoriteFiles = async () => {
+            const favoriteAlbum = doc(firebaseFirestore, `users/${user?.uid}/albums/favorite`);
+            const favoriteAlbumDoc = await getDoc(favoriteAlbum);
+            if (favoriteAlbumDoc.exists()) {
+                setCurrentFiles(favoriteAlbumDoc.data().files || []);
+            }
+        };
+
+        fetchFavoriteFiles();
+    }, [user]);
     const toggleSelected = (image) => {
         setSelectedImages((prevSelected) =>
             prevSelected.some((img) => img.id === image.id)
@@ -91,20 +104,23 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
         }
       };
 
-      const handelFav =(imageUrl)=>{
-        let updatedFvoriteFile =[];
-       if(favoriteAlbum.files.includes(imageUrl))  {
-        updatedFvoriteFile= favoriteAlbum.files.filter((file) =>file !== imageUrl)
-       }
-       else {
-          updatedFvoriteFile =[...favoriteAlbum.files , imageUrl]
-       }
-       const selectedAlbumRef = doc(firebaseFirestore, 'albums', 'favorite');
-        updateDoc(selectedAlbumRef, {
-        files:updatedFvoriteFile
-      })
-      
-    }
+
+      const handelFav = async (imageUrl) => {
+        const favoriteAlbum = doc(firebaseFirestore, `users/${user?.uid}/albums/favorite`);
+        const updatedFiles = currentFiles.includes(imageUrl)
+            ? currentFiles.filter((file) => file !== imageUrl)
+            : [...currentFiles, imageUrl];
+
+        await updateDoc(favoriteAlbum, { files: updatedFiles });
+        setCurrentFiles(updatedFiles);
+
+        toast.success(currentFiles.includes(imageUrl) 
+            ? 'Successfully removed from favorite album' 
+            : 'Successfully added to favorite album'
+        );
+    };
+   
+    
     return (
         <>
                   <UploadForm user={user}/>
@@ -135,19 +151,25 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
                                 transition={{ delay: 1 }}
                                 onClick={(event) => handleClick(index, image, event)}
                             />
-                            <Fab size='small' sx={{
-                                //   ...(docs && (favoriteAlbum?.files.includes(image.url) ? {color:"#ff6f61"}:{borderColor:"#ff6f61" , border:1})),
-                                fontSize: '1.625rem',
-                                position: 'absolute',
-                                top: '20px',
-                                p: 1,
-                                right: 0,
-                                opacity: 0,
-                                transition: 'opacity 0.3s ease',
-                                '&:hover': { opacity: 1 }
-                            }}
-                                onClick={() =>{ handelFav(image.url)}}
-                                className="group-hover:opacity-100 z-0">
+                             <Fab
+                                size='small'
+                                sx={{
+                                    ...(currentFiles.includes(image.url)
+                                        ? { color: "#ff6f61" }
+                                        : { borderColor: "#ff6f61", border: 1 }
+                                    ),
+                                    fontSize: '1.625rem',
+                                    position: 'absolute',
+                                    top: '20px',
+                                    p: 1,
+                                    right: 0,
+                                    opacity: 0,
+                                    transition: 'opacity 0.3s ease',
+                                    '&:hover': { opacity: 1 }
+                                }}
+                                onClick={() => handelFav(image.url)}
+                                className="group-hover:opacity-100 z-0"
+                            >
                                 <FaHeart />
                             </Fab>
                         </motion.div>

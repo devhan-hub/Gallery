@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import useFirestore from '../hooks/useFirestore';
 import Masonry from '@mui/lab/Masonry';
 import { motion } from 'framer-motion';
@@ -7,21 +7,34 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Fab, Button, ButtonGroup, Checkbox } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
-import { deleteDoc, doc , getDoc , updateDoc } from "firebase/firestore"
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
 import UploadForm from './UploadForm';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
-const Video = ({user}) => {
-  const [docs] =useFirestore(`users/${user?.uid}/videos`)
-  const [ videoSlideoPen,sevideoSlideoPen] = useState(false);
+const Video = ({ user }) => {
+  const [docs] = useFirestore(`users/${user?.uid}/videos`)
+  const [videoSlideoPen, sevideoSlideoPen] = useState(false);
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [SelectedVideos, setSelectedVideos] = useState([]);
   const [clickTimeOut, setClickTimeOut] = useState(null)
   const [currentIndex, setCurrentIndex] = useState(null);
+  const [currentFiles, setCurrentFiles] = useState([]);
 
+  useEffect(() => {
+
+    const fetchFavoriteFiles = async () => {
+      const favoriteAlbum = doc(firebaseFirestore, `users/${user?.uid}/albums/favorite`);
+      const favoriteAlbumDoc = await getDoc(favoriteAlbum);
+      if (favoriteAlbumDoc.exists()) {
+        setCurrentFiles(favoriteAlbumDoc.data().files || []);
+      }
+    };
+
+    fetchFavoriteFiles();
+  }, [user]);
   const toggleSelected = (video) => {
     setSelectedVideos((prevSelected) =>
       prevSelected.some((vid) => vid.id === video.id)
@@ -48,11 +61,11 @@ const Video = ({user}) => {
 
   const handelAddToALbum = async (albumId) => {
     const selectedVideoUrl = SelectedVideos.map((video) => video.url);
-    const selectedAlbumRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${albumId}`);
+    const selectedAlbumRef = doc(firebaseFirestore, `users/${user?.uid}/albums/${albumId}`);
     const selectedAlbumDoc = await getDoc(selectedAlbumRef);
-          if (selectedAlbumDoc.exists()) {
+    if (selectedAlbumDoc.exists()) {
       const currentFiles = selectedAlbumDoc.data().files || [];
-            await updateDoc(selectedAlbumRef, {
+      await updateDoc(selectedAlbumRef, {
         files: [...currentFiles, ...selectedVideoUrl]
       });
       setSelectedVideos([])
@@ -78,9 +91,24 @@ const Video = ({user}) => {
       }
     })
   }
+  const handelFav = async (videoUrl) => {
+    const favoriteAlbum = doc(firebaseFirestore, `users/${user?.uid}/albums/favorite`);
+    const updatedFiles = currentFiles.includes(videoUrl)
+      ? currentFiles.filter((file) => file !== videoUrl)
+      : [...currentFiles, videoUrl];
+
+    await updateDoc(favoriteAlbum, { files: updatedFiles });
+    setCurrentFiles(updatedFiles);
+
+    toast.success(currentFiles.includes(videoUrl)
+      ? 'Successfully removed from favorite album'
+      : 'Successfully added to favorite album'
+    );
+  };
+
   return (
     <>
-        <UploadForm user={user}/>
+      <UploadForm user={user} />
 
       {docs && (
         <Masonry columns={{ sm: 2, md: 3, lg: 4 }} spacing={3}>
@@ -107,17 +135,25 @@ const Video = ({user}) => {
                 className="w-full rounded-sm object-fill pt-4"
                 onClick={(event) => handleClick(index, video, event)}
               />
-              <Fab size='small' sx={{
-                fontSize: '1.625rem',
-                position: 'absolute',
-                top: '20px',
-                p: 1,
-                right: 0,
-                opacity: 0,
-                transition: 'opacity 0.3s ease',
-                '&:hover': { opacity: 1 }
-              }}
-                className="group-hover:opacity-100 z-0">
+              <Fab
+                size='small'
+                sx={{
+                  ...(currentFiles.includes(video.url)
+                    ? { color: "#ff6f61" }
+                    : { borderColor: "#ff6f61", border: 1 }
+                  ),
+                  fontSize: '1.625rem',
+                  position: 'absolute',
+                  top: '20px',
+                  p: 1,
+                  right: 0,
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease',
+                  '&:hover': { opacity: 1 }
+                }}
+                onClick={() => handelFav(video.url)}
+                className="group-hover:opacity-100 z-0"
+              >
                 <FaHeart />
               </Fab>
             </motion.div>
