@@ -4,13 +4,14 @@ import Masonry from '@mui/lab/Masonry';
 import { motion } from 'framer-motion';
 import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import { Fab, Button, ButtonGroup, Snackbar, Alert, Checkbox } from '@mui/material';
+import { Fab, Button, ButtonGroup, Checkbox } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc , getDoc , updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
 import UploadForm from './UploadForm';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
 const Video = ({user}) => {
@@ -55,8 +56,10 @@ const Video = ({user}) => {
         files: [...currentFiles, ...selectedVideoUrl]
       });
       setSelectedVideos([])
+      toast.success('successfully added to album')
+
     } else {
-      console.error("Album does not exist!");
+      toast.error("Album does not exist!");
     }
   };
   const handelDeleteOpp = async () => {
@@ -67,10 +70,11 @@ const Video = ({user}) => {
         await deleteDoc(fireRef)
         await deleteObject(storgaRef)
         setSelectedVideos([])
+        toast.sucess('successfully deleted')
       }
       catch (error) {
         setSelectedVideos([])
-        console.error("Error deleting image:", error);
+        toast.error("unabel to delete:");
       }
     })
   }
@@ -139,7 +143,7 @@ const Video = ({user}) => {
         onClose={() => setMoveDialogOpen(false)}
         onMove={handelAddToALbum}
         userId={user.uid}
-        titel={'move to album video'}
+        titel={'move to album '}
       />
     </>
   );

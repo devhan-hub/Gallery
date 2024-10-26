@@ -5,13 +5,15 @@ import { motion } from 'framer-motion';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import { Fab, Button, ButtonGroup, Snackbar, Alert, Checkbox, Typography } from '@mui/material';
+import { Fab, Button, ButtonGroup, Checkbox, Typography } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
 import { deleteDoc, doc, getDoc, updateDoc ,exists } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
 import UploadForm from './UploadForm';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';;
 
 const ImageSlide = React.lazy(() => import('./SlideDialog'));
 
@@ -67,9 +69,10 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
                  await deleteObject(storgaRef);
              }
              setSelectedImages([]);
+             toast.success('successfully deleted')
          } catch (error) {
            setSelectedImages([]);
-           console.error("Error deleting image:", error);
+           toast.error("unabel to delete ");
          }
        };
     const handelAdd = async (albumId) => {
@@ -82,8 +85,9 @@ const favoriteAlbum = docs?.filter((album)=>album.id == 'favorite')
             files: [...currentFiles, ...selectedImageUrl]
           });
           setSelectedImages([])
+          toast.success('successfully added to album')
         } else {
-          console.error("Album does not exist!");
+          toast.error("Album does not exist!");
         }
       };
 

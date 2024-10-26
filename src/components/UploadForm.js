@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles';
 import { Fab, Button  } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Progress from './Progress';
 import {v4 as uuidv4} from 'uuid'
 
@@ -33,14 +34,14 @@ const UploadForm = ({user}) => {
         if (selected && types.includes(selected.type)) {
             setFile(selected)
             setId(uuidv4());
-            setError('')
+            toast.success('Successfully uploaded')
             const mimeType =selected.type;
            setFileType(mimeType.split('/')[0]);
         }
         else {
             setFile(null)
             setId(null)
-            setError('pls seectect an image file (png or jpeg)')
+            toast.error('pls seectect an image file (png or jpeg)')
         }
     }
     return (
@@ -56,7 +57,6 @@ const UploadForm = ({user}) => {
             </label>
 
             <div className='w-full px-40 flex flex-col gap-2 '>
-                {error && <div className='mx-auto'>{error}</div>}
                 {file && <Progress file={file} user={user} fileType={fileType}  setFile={setFile} id={id}/>}
             </div>
         </form>

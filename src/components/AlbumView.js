@@ -1,14 +1,15 @@
 import React, { useState, Suspense } from 'react';
 import { FaAngleLeft } from 'react-icons/fa6';
 import { motion } from 'framer-motion'
-import { Button, Checkbox, Snackbar, Alert, Fab, ButtonGroup } from '@mui/material';
+import { Button, Checkbox, Alert, Fab, ButtonGroup } from '@mui/material';
 import { NewAlbum } from './NewAlbum'
 import { MoveToAlbumDialog } from './MoveToAlbumDialog'
 import useFirestoreAlbum from '../hooks/useFirestoreAlbum'
 import { updateDoc, doc } from 'firebase/firestore';
 import { firebaseFirestore } from '../firebase/Config';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const ImageSlide = React.lazy(() => import('./SlideDialog'))
 const AlbumView = ({ user }) => {
   const [docs] = useFirestoreAlbum(`users/${user?.uid}/albums`);
@@ -18,8 +19,6 @@ const AlbumView = ({ user }) => {
   const [open, setOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(null);
   const [isImage, setIsImage] = useState(true)
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
   const [clickTimeOut, setClickTimeOut] = useState(null)
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [isMove, setIsMove] = useState(false)
@@ -68,6 +67,9 @@ const AlbumView = ({ user }) => {
     })
     setSelectedAlbum({ ...selectedAlbum, files: updated });
     setSelectedAlbumPhoto([])
+    if(!isMove){
+      toast.success('successfully deleted to album')
+    }
   }
   const handelAdd = (albumId) => {
     let updatedAlbum = docs.find((album) => album.id === albumId);
@@ -78,8 +80,10 @@ const AlbumView = ({ user }) => {
     })
     if (!isMove) {
       setSelectedAlbumPhoto([])
+      toast.success('successfully copied to album')
     }
     else {
+      toast.success('successfully moved to album')
       handelDeleteOpp()
     }
   }
@@ -258,11 +262,7 @@ const AlbumView = ({ user }) => {
           titel={titel}
         />
       </Suspense>
-      <Snackbar open={snackbarOpen} autoHideDuration={2000} onClose={() => setSnackbarOpen(false)}>
-        <Alert onClose={() => setSnackbarOpen(false)}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+     
     </motion.div>
   );
 };

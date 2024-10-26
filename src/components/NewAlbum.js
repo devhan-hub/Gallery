@@ -3,6 +3,8 @@ import { useState } from 'react';
 import {TextField} from '@mui/material';
 import {  firebaseFirestore } from '../firebase/Config';
 import { setDoc ,doc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export const NewAlbum = ({ open ,setOpen , userId}) => {
     const [title, setTitle] = useState('');
     const handleSubmit = (e) => {
@@ -12,6 +14,7 @@ export const NewAlbum = ({ open ,setOpen , userId}) => {
           name:title,
           files:[]
         })
+        toast.success(`successfully created album ${title}`)
       }
      
   setOpen(false)  };

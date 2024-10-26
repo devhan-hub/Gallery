@@ -71,20 +71,20 @@ const Navbar = () => {
                 
                 <Drawer anchor="bottom" open={toggle} onClose={handleToggleDrawer(false)}>
                     <List sx={{ width: '100%', display:{xs:'block', md:'none'} }}>
-                        <ListItem button onClick={() => { setActiveItem(0); navigate("/"); handleToggleDrawer(false)(); }}>
+                        <ListItem className='cursor-pointer' button onClick={() => { setActiveItem(0); navigate("/"); handleToggleDrawer(false)(); }}>
                             <PhotoSizeSelectActualIcon sx={{ mr: 1 }} />
                             <ListItemText primary="Photos" />
                         </ListItem>
-                        <ListItem button onClick={() => { setActiveItem(1); navigate("/videoss"); handleToggleDrawer(false)(); }}>
+                        <ListItem className='cursor-pointer' button onClick={() => { setActiveItem(1); navigate("/videoss"); handleToggleDrawer(false)(); }}>
                             <VideoLibraryOutlinedIcon sx={{ mr: 1 }} />
                             <ListItemText primary="Videos" />
                         </ListItem>
-                        <ListItem button onClick={() => { setActiveItem(2); navigate("/albums"); handleToggleDrawer(false)(); }}>
+                        <ListItem className='cursor-pointer' button onClick={() => { setActiveItem(2); navigate("/albums"); handleToggleDrawer(false)(); }}>
                             <PhotoAlbumOutlinedIcon sx={{ mr: 1 }} />
                             <ListItemText primary="Albums" />
                         </ListItem>
                         <Divider/>
-                        <ListItem button onClick={() => { signOut(firebaseAuth); handleToggleDrawer(false)(); }}>
+                        <ListItem className='cursor-pointer' button onClick={() => { signOut(firebaseAuth); handleToggleDrawer(false)(); }}>
                             <ListItemText primary="Logout" />
                         </ListItem>
                     </List>

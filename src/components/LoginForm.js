@@ -6,6 +6,8 @@ import { firebaseAuth, firebaseFirestore } from '../firebase/Config';
 import { styled } from '@mui/material/styles';
 import { doc, setDoc } from 'firebase/firestore';
 import { SignInValidate, SignUpValidate } from './Validate';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const TextFieldStyled = styled(TextField)({
   '& .MuiFilledInput-root': {
@@ -32,6 +34,7 @@ const TextFieldStyled = styled(TextField)({
   },
 });
 
+
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,62 +43,78 @@ const LoginForm = () => {
   const [conifPsswrd, setConifPsswrd] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
+
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setError(null);
 
     const validateError = SignUpValidate(firstName, lastName, email, password, conifPsswrd);
 
     if (validateError) {
-      setError(validateError);
+      toast.error(validateError);
       return;
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(firebaseAuth, email, password);
-      const user = userCredential.user;
-      setUser(user);
+      await toast.promise (
 
-      const userDoc = doc(firebaseFirestore, `users/${user.uid}`);
-      const userInfo = {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        userId: user.uid,
-      };
+      createUserWithEmailAndPassword(firebaseAuth, email, password).then( async (userCredential)=>{
+        const user = userCredential.user;
+        setUser(user);
+  
+        const userDoc = doc(firebaseFirestore, `users/${user.uid}`);
+        const userInfo = {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          userId: user.uid,
+        };
+  
+        await setDoc(userDoc, userInfo);
+      }),
+      {
+        pending: 'Signing up...',
+        success: 'Successfully signed up! 🎉',
+      }
+      );
 
-      await setDoc(userDoc, userInfo);
     } catch (error) {
-      setError(error.code === 'auth/email-already-in-use' ? 'Email already registered' : 'Unable to sign up. Please try again.');
+      toast.error('auth/email-already-in-use' ? 'Email already registered' : 'Unable to sign up. Please try again.');
+         }
+    
+    };    
+  
+    const handleSignIn = async (e) => {
+      e.preventDefault();
+          const validateError = SignInValidate(email, password);
+      if (validateError) {
+        toast.error(validateError);
+        return;
+      }
+      try {
 
-    }
-  };
-
-  const handleSignIn = async (e) => {
-    e.preventDefault();
-    setError(null);
-    const validateError = SignInValidate(email, password, setError);
-    if (validateError) {
-      setError(validateError);
-      return;
-    }
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
-      const user = userCredential.user;
-      setUser(user);
-    } catch {
-      setError('Email or password is incorrect');
-    }
-  };
-
+      await toast.promise(
+        signInWithEmailAndPassword(firebaseAuth, email, password).then((userCredential)=>{
+          const user = userCredential.user;
+          setUser(user);
+        }),
+        {
+          pending: 'Signing in...',
+          success:'Successfully signed in! 🎉',
+         
+        }
+        );
+       
+        } catch (error) {
+          toast.error('auth/invalid-credential' ? 'Email or password is incorrect' : 'Unable to sign up. Please try again.');
+             }
+        
+        }
+ 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
     setEmail('');
     setPassword('');
-    setError(null);
   };
   return (
     <div className="h-screen relative" style={{ backgroundImage: "url('/Images/galery3.png')" }}>
@@ -163,10 +182,7 @@ const LoginForm = () => {
                 value={conifPsswrd}
                 onChange={(e) => setConifPsswrd(e.target.value)}
               />
-            )}
-
-            {error && <p className='text-red-500 self-end italic'>{error}</p>}
-           
+            )}     
             {isLogin ? (
               <Link
                 component="button"
