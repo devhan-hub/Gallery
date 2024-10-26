@@ -7,7 +7,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { Fab, Button, ButtonGroup, Snackbar, Alert, Checkbox } from '@mui/material';
 import { FaHeart } from 'react-icons/fa';
 import { firebaseStorage, firebaseFirestore } from '../firebase/Config';
-import { deleteDoc, doc } from "firebase/firestore"
+import { deleteDoc, doc , getDoc , updateDoc } from "firebase/firestore"
 import { deleteObject, ref } from 'firebase/storage';
 import UploadForm from './UploadForm';
 
@@ -45,6 +45,20 @@ const Video = ({user}) => {
     }
   }
 
+  const handelAddToALbum = async (albumId) => {
+    const selectedVideoUrl = SelectedVideos.map((video) => video.url);
+    const selectedAlbumRef = doc(firebaseFirestore,`users/${user?.uid}/albums/${albumId}`);
+    const selectedAlbumDoc = await getDoc(selectedAlbumRef);
+          if (selectedAlbumDoc.exists()) {
+      const currentFiles = selectedAlbumDoc.data().files || [];
+            await updateDoc(selectedAlbumRef, {
+        files: [...currentFiles, ...selectedVideoUrl]
+      });
+      setSelectedVideos([])
+    } else {
+      console.error("Album does not exist!");
+    }
+  };
   const handelDeleteOpp = async () => {
     SelectedVideos.forEach(async (video) => {
       const fireRef = doc(firebaseFirestore, 'all-files', video.id)
@@ -90,7 +104,6 @@ const Video = ({user}) => {
                 onClick={(event) => handleClick(index, video, event)}
               />
               <Fab size='small' sx={{
-                //   ...(state.albums && (selectedFavoriteAlbum?.selected.includes(image.url) ? {color:"#ff6f61"}:{borderColor:"#ff6f61" , border:1})),
                 fontSize: '1.625rem',
                 position: 'absolute',
                 top: '20px',
@@ -100,7 +113,6 @@ const Video = ({user}) => {
                 transition: 'opacity 0.3s ease',
                 '&:hover': { opacity: 1 }
               }}
-                // onClick={() =>{ favorite(image.url)}}
                 className="group-hover:opacity-100 z-0">
                 <FaHeart />
               </Fab>
@@ -125,7 +137,9 @@ const Video = ({user}) => {
       <MoveToAlbumDialog
         open={moveDialogOpen}
         onClose={() => setMoveDialogOpen(false)}
-        // onMove={handelAdd}
+        onMove={handelAddToALbum}
+        userId={user.uid}
+        titel={'move to album video'}
       />
     </>
   );
