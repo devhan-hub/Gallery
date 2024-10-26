@@ -32,9 +32,11 @@ const AlbumView = ({ user }) => {
     if (clickTimeOut) {
       clearTimeout(clickTimeOut)
       setClickTimeOut(null)
+
     }
     if (event.detail === 2) {
       toggleSelected(albURL);
+
     }
     else {
 
@@ -42,6 +44,7 @@ const AlbumView = ({ user }) => {
         setCurrentIndex(index);
         setOpen(true);
         setIsImage(ISimage)
+        console.log(albURL)
       }, 300))
     }
   }
@@ -97,51 +100,67 @@ const AlbumView = ({ user }) => {
         <Fab
           variant="extended"
           onClick={handleClickOpen}
-          sx={{ position: 'absolute', right: '1.05rem', top: '5rem', backgroundColor: '#ff6f61', color: 'white', borderRadius: 3 , '&:hover':{bgcolor:'#ff6f61', color:'white' , scale:'.9'}}}
+          sx={{ position: 'absolute', right: '1.05rem', top: '5rem', backgroundColor: '#ff6f61', color: 'white', borderRadius: 3, '&:hover': { bgcolor: '#ff6f61', color: 'white', scale: '.9' } }}
         >
           <LibraryAddIcon sx={{ mr: 1 }} />
           Create
         </Fab>
-        
+
         <NewAlbum
           open={creatOpen}
           setOpen={setCreatOpen}
           userId={user?.uid}
         />
-        <h2 className="font-bold text-lg mb-4 text-violet-700 text-center">Albums</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center ">
-          {docs && (docs.map(album => (
+       <h2 className="font-bold text-lg mb-4 text-violet-700 text-center">Albums</h2>
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-center justify-center ">
+    {docs && docs.map(album => {
+        let baseFile;
+        if (album.files.length > 0) {
+            baseFile = album.files[0].split('?')[0];
+        }
 
+        return (
             <div
-              key={album.id}
-              className="relative cursor-pointer flex sm:flex-col items-center mb-6 break-inside-avoid px-20"
-              onClick={() => { setSelectedAlbum(album) }}
+                key={album.id}
+                className="relative cursor-pointer flex sm:flex-col items-center mb-6 break-inside-avoid px-20"
+                onClick={() => { setSelectedAlbum(album) }}
             >
-              {(/\.(mp4)$/i.test(album.files[0])) ? (
-                <video
-                  src={album.files.length !== 0 ? album.files[0] : "Video/all.mp4"}
-                  autoPlay muted
-                  className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
-                />
-              ) : (
-                <img
-                  src={album.files.length !== 0 ? album.files[0] : "Images/gallery.png"}
-                  alt={`Album ${album.id}`}
-                  className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
-                />
-              )}
-              <div className="flex flex-col capitalize text-violet-700 font-semibold p-3  text-md rounded">
-                <p>{album.name}</p>
-                <p> {album.files?.length} </p>
-              </div>
+                {album.files.length === 0 ? (
+                    <img
+                        src="Images/gallery.png"
+                        alt={`Album ${album.id} - No images available`}
+                        className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
+                    />
+                ) : baseFile && /\.(jpg|jpeg|png|gif)$/i.test(baseFile) ? (
+                    <img
+                        src={album.files[0]}
+                        alt={`Album ${album.id}`}
+                        className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
+                    />
+                ) : baseFile && /\.(mp4|mov|avi|wmv|mkv)$/i.test(baseFile) ? (
+                    <video
+                        src={album.files[0]}
+                        autoPlay muted
+                        className="size-28 md:size-36 lg:size-40 rounded-lg object-cover"
+                    />
+                ) : (
+                    <div className="text-center text-gray-500">
+                        Unsupported media type
+                    </div>
+                )}
+                <div className="flex flex-col capitalize text-violet-700 font-semibold p-3 text-md rounded">
+                    <p>{album.name}</p>
+                    <p>{album.files?.length}</p>
+                </div>
             </div>
-          )))}
-
-        </div>
+        );
+    })}
+</div>
 
       </motion.div>
     );
   }
+
   return (
     <motion.div
       variants={ContainerMotion}
@@ -156,37 +175,54 @@ const AlbumView = ({ user }) => {
           <FaAngleLeft className='text-xl' />
           {selectedAlbum.name}
         </div>
-        {selectedAlbum.files.length} {(/\.(mp4)$/i.test(selectedAlbum.files[0])) ? "Videos" : "Images"}
+        {selectedAlbum.files.length } {'medias'}
       </button>
 
-      <div className=" md:columns-2 lg:columns-3 gap-6 ">
-        {selectedAlbum.files.map((file, index) => (
-          <div key={index} className="group mb-8 group md:mb-10 shadow-xl relative pt-4">
-            {selectedAlbumPhoto.length > 0 && (
-              <Checkbox
-                sx={{ position: 'absolute', left: '0', top: '-20px', zIndex: '30' }}
-                size="small"
-                checked={selectedAlbumPhoto.some((alb) => alb === file)}
-                onChange={() => toggleSelected(file)}
-              />
-            )}
-            {(/\.(mp4)$/i.test(file.url)) ?
-              (
-                <video
-                  src={file}
-                  className="w-full h-auto rounded-lg object-cover mb-6"
-                  onClick={(event) => handleClick(index, file, event, false)}
+<div className="md:columns-2 lg:columns-3 gap-6">
+    {selectedAlbum && selectedAlbum.files && selectedAlbum.files.length > 0 ? (
+        selectedAlbum.files.map((file, index) => {
+            const baseFile = file.split('?')[0];
 
-                />) : (
-                <img
-                  src={file}
-                  className="w-full h-auto rounded-lg object-cover mb-6"
-                  onClick={(event) => handleClick(index, file, event, true)}
-                />
-              )}
-          </div>
-        ))}
-      </div>
+            return (
+                <div key={file} className="group mb-8 md:mb-10 shadow-xl relative pt-4">
+                    {selectedAlbumPhoto.length > 0 && file && (
+                        <Checkbox
+                            sx={{ position: 'absolute', left: '0', top: '-20px', zIndex: '30' }}
+                            size="small"
+                            checked={selectedAlbumPhoto.some((alb) => alb === file)}
+                            onChange={() => toggleSelected(file)}
+                        />
+                    )}
+                    {baseFile && /\.(jpg|jpeg|png|gif)$/i.test(baseFile) ? (
+                        <img
+                            src={file}
+                            className="w-full h-auto rounded-lg object-cover mb-6"
+                            onClick={(event) => handleClick(index, file, event, true)}
+                            alt={`Image ${index}`}
+                        />
+                      ) : baseFile && /\.(mp4|mov|avi|wmv|mkv)$/i.test(baseFile) ? (  
+                          <video
+                            src={file}
+                            className="w-full h-auto rounded-lg object-cover mb-6"
+                            onClick={(event) => handleClick(index, file, event, false)}
+                            controls
+                            alt={`Video ${index}`}
+                        >
+                            Your browser does not support the video tag.
+                        </video>
+                    ) : (
+                        <div className="text-center text-gray-500">
+                            Unsupported media type
+                        </div>
+                    )}
+                </div>
+            );
+        })
+    ) : (
+        <div>No files available in this album.</div>
+    )}
+</div>
+
       <Suspense fallback={<div>Loading components...</div>}>
         <ImageSlide
           currentIndex={currentIndex}
