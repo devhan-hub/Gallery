@@ -22,12 +22,9 @@ const SlideDialog = ({ open, setOpen, content, setCurrentIndex, currentIndex, is
   }
 
   return (
-    <div className={`fixed -top-10 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-[999999] p-0 ${open ? '' : 'hidden'}`} >
+    <div className={`fixed top-0  left-0 w-full h-screen flex items-center  justify-center  bg-black bg-opacity-90 z-[999999] px-20 ${open ? '' : 'hidden'}`} >
          
-      <div className="bg-white mx-auto w-full relative " >
-      <button className="absolute top-10 lg:top-16 lg:right-32 right-16 text-[#007aff] text-2xl cursor-pointer z-[9999999999]" onClick={()=> setOpen(false)}>
-          <FaTimes />
-        </button>
+      
         {open && (
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -39,11 +36,15 @@ const SlideDialog = ({ open, setOpen, content, setCurrentIndex, currentIndex, is
             onSwiper={(swiper) => console.log(swiper)}
             initialSlide={currentIndex}
             onSlideChange={(swiper) => setCurrentIndex(swiper.activeIndex)}
+            className=' h-auto flex items-center justify-center bg-white bg-opacity-80 relative'
           >
+            <button className="absolute top-24 lg:top-16 lg:right-32 right-4 text-[#007aff] text-2xl cursor-pointer z-[9999999999]" onClick={()=> setOpen(false)}>
+          <FaTimes />
+        </button>
             {content.map((item, index) => (
-              <SwiperSlide key={index} className='p-20 h-[80vh]' >
+              <SwiperSlide key={index} className='my-auto mx-auto p-10' >
                 {isImage ? (
-                  <img src={item.url || item} alt="slide content" className="max-h-[75vh] h-auto w-auto mx-auto" />
+                  <img src={item.url || item} alt="slide content" className="m-auto max-w-[80%] w-auto max-h-[90vh] h-auto" />
                 ) : (
                   <video src={item.url || item} controls muted alt="slide content" className="max-h-[75vh] h-auto w-auto mx-auto" />
                 )}
@@ -52,7 +53,7 @@ const SlideDialog = ({ open, setOpen, content, setCurrentIndex, currentIndex, is
           </Swiper>
         )}
       </div>
-    </div>
+    // </div>
   );
 };
 
