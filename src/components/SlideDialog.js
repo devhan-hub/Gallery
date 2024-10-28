@@ -24,7 +24,9 @@ const SlideDialog = ({ open, setOpen, content, setCurrentIndex, currentIndex, is
   return (
     <div className={`fixed top-0  left-0 w-full h-screen flex items-center  justify-center  bg-black bg-opacity-90 z-[999999] px-20 ${open ? '' : 'hidden'}`} >
          
-      
+         <button className="absolute top-6 lg:top-16 lg:right-32 right-4 text-[#007aff] text-2xl cursor-pointer z-[9999999999]" onClick={()=> setOpen(false)}>
+          <FaTimes />
+        </button>
         {open && (
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -38,9 +40,7 @@ const SlideDialog = ({ open, setOpen, content, setCurrentIndex, currentIndex, is
             onSlideChange={(swiper) => setCurrentIndex(swiper.activeIndex)}
             className=' h-auto flex items-center justify-center bg-white bg-opacity-80 relative'
           >
-            <button className="absolute top-24 lg:top-16 lg:right-32 right-4 text-[#007aff] text-2xl cursor-pointer z-[9999999999]" onClick={()=> setOpen(false)}>
-          <FaTimes />
-        </button>
+           
             {content.map((item, index) => (
               <SwiperSlide key={index} className='my-auto mx-auto p-10' >
                 {isImage ? (

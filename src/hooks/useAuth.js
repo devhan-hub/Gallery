@@ -3,19 +3,15 @@ import {firebaseAuth}  from '../firebase/Config'
 import { onAuthStateChanged } from 'firebase/auth';
 const useAuth = () => {
  const [user , setUser]= useState(null)
+ const[loading , setLoading]= useState(true)
     useEffect(()=> {
-        const unsubscribe = onAuthStateChanged((firebaseAuth) , (user)=>{
-           if(user){
-             setUser(user)
-     }
-           else{
-             setUser(null)
-           }
-          
+        const unsubscribe = onAuthStateChanged(firebaseAuth , (user)=>{
+         setUser(user || null)
+         setLoading(false)
         })
         return () => unsubscribe();
-       }, [user]);
-         return ( [user])
+       }, []);
+         return ([ user , loading])
 }
 
 export default useAuth

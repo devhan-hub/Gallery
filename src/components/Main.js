@@ -5,6 +5,7 @@ import Video from './Video';
 import { Route, Routes , useLocation} from 'react-router-dom';
 import {AnimatePresence} from 'framer-motion'
 import PictureDisplay from './PictureDisplay';
+import LoginForm from './LoginForm';
 import Notfound from './Notfound';
 
 const Main = ({user}) => {
@@ -19,10 +20,11 @@ const Main = ({user}) => {
           <Navbar />
           <AnimatePresence>
           <Routes location={location} key={location.key}>
+          <Route path='/Login' element={<LoginForm />} />
             <Route path='/' element={<PictureDisplay user={user}/>} />
             <Route path='/albums' element={<AlbumView  user={user}/>} />
              <Route path='/videoss' element={<Video  user={user}/>} />
-            {/* // <Route path='*' element={<Notfound  />} /> */ }
+             <Route path='*' element={<Notfound  />} />  
           </Routes>
           </AnimatePresence>
         </div> 
