@@ -58,6 +58,7 @@ Why wait? Join us and keep your memories organized and accessible!
 
 ## Project Structure
    ```plaintext
+ LICENSE
 ├── README.md
 ├── package-lock.json
 ├── package.json
@@ -77,7 +78,6 @@ Why wait? Join us and keep your memories organized and accessible!
 │   │   ├── AlbumView.js
 │   │   ├── App.js
 │   │   ├── GenericDialog.js
-│   │   ├── HandelModify.js
 │   │   ├── LoginForm.js
 │   │   ├── Main.js
 │   │   ├── MoveToAlbumDialog.js
