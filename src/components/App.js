@@ -4,7 +4,6 @@ import useAuth from '../hooks/useAuth'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ClipLoader } from 'react-spinners';
-import { Navigate } from 'react-router-dom';
 
 
 
@@ -23,7 +22,7 @@ if(loading){
      
      <div>
       {
-        user?<Main user={user}/>:Navigate('./Login')
+        user?<Main user={user}/>:<LoginForm />
 
       }
       <ToastContainer/>
